@@ -15,6 +15,7 @@ typedef enum
 	PASSWORD_CHOSEN		= 5,
 	PASSWORD_CONFIRMED	= 6,
 	INGAME				= 7,
+	QUITTING			= 8
 }	PLAYER_STATE;
 
 class Player

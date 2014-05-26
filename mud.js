@@ -13,35 +13,40 @@ var scrypt = require('scrypt');
 var mud = require('./build/Release/mud');
 mud.setScrypt(scrypt);
 
-var sockets = [];
+var sockets = {};
 
 function broadcast(fromuid, msg){
-	sockets.forEach(function(socket){
-		if (socket.uid !== fromuid){
-			socket.write(msg);
+	for (var sockuid in sockets){
+		if (sockets.hasOwnProperty(sockuid) && sockuid !== fromuid){
+			sockets[sockuid].write(msg);
 		}
-	});
+	}
 }
+
+function write(sockuid, msg){
+	sockets[sockuid].write(msg);
+}
+
+mud.setBroadcast(broadcast);
+mud.setWrite(write);
 
 var server = net.createServer(function(socket) {
 	socket.setKeepAlive(true, 10000);
 	socket.setNoDelay(true);
 	socket.uid = cuid();
-	mud.addSocket(socket);
-	mud.setBroadcast(broadcast);
-	sockets.push(socket);
-	socket.state = String.fromCharCode(1);
+	socket.playerState = String.fromCharCode(1);
+	sockets[socket.uid] = socket;
 	socket.write("Who are you?\n");
 	socket.on('data', function(chunk){
-		var str = socket.uid + socket.state + chunk.toString('utf-8').trim();
+		var str = socket.uid + socket.playerState + chunk.toString('utf-8').trim();
 		var res = mud.process(str);
-		socket.state = res.charAt(0);
+		socket.playerState = res.charAt(0);
 		socket.write(res.substring(1));
-		if (socket.state === String.fromCharCode(6)){
-			socket.state = mud.process(socket.uid + socket.state + "").charAt(0);
-		}
-		if (str.toLowerCase() === 'quit'){
+		if (socket.playerState === String.fromCharCode(6)){
+			socket.playerState = mud.process(socket.uid + socket.playerState + "").charAt(0);
+		} else if (socket.playerState === String.fromCharCode(8)){
 			socket.end();
+			delete sockets[socket.uid];
 		}
 	});
 }).listen(9000, function() {

@@ -6,8 +6,8 @@
 using namespace std;
 using namespace v8;
 
-static unordered_map<string, Persistent<Object> > ActiveSockets;
 static Persistent<Object> BroadcastObj;
+static Persistent<Object> WriteObj;
 
 Handle<Value> SetBroadcast(const Arguments& args)
 {
@@ -36,7 +36,7 @@ void Broadcast(string sockuid, string msg)
 	BroadcastObj->CallAsFunction(global, 2, broadcastArgv);
 }
 
-Handle<Value> AddSocket(const Arguments& args)
+Handle<Value> SetWrite(const Arguments& args)
 {
 	HandleScope handleScope;
 	
@@ -48,11 +48,9 @@ Handle<Value> AddSocket(const Arguments& args)
     	ThrowException(Exception::TypeError(String::New("Wrong arguments")));
     	return handleScope.Close(Undefined());
 	}
-	
-	Handle<Object> socket = args[0]->ToObject();
-	Handle<String> sockuid = socket->Get(String::New("uid"))->ToString();
-	ActiveSockets[string(*String::Utf8Value(sockuid))] = Persistent<Object>::New(socket);
-	
+
+	WriteObj = Persistent<Object>::New(args[0]->ToObject());
+
 	return handleScope.Close(Null());
 }
 
@@ -61,9 +59,6 @@ void Write(string sockuid, string msg)
 	Local<Context> context = Context::GetCurrent();
 	Handle<Object> global = context->Global();
 
-	Persistent<Object> socket = ActiveSockets[sockuid];
-	Handle<Object> write = socket->Get(String::New("write"))->ToObject();
-
-	Handle<Value> writeArgv[] = { String::New(msg.c_str()), String::New("utf8"), Null()};
-	write->CallAsFunction(global, 3, writeArgv);
+	Handle<Value> argv[] = { String::New(sockuid.c_str()), String::New(msg.c_str()) };
+	WriteObj->CallAsFunction(global, 2, argv);
 }

@@ -15,30 +15,34 @@ typedef struct CommandPair
 
 string getCmd(string sockuid, string args)
 {
-	return string("Just got something\n");
+	return string(1, (char)INGAME) + "Just got something\n";
 }
 
 string gossipCmd(string sockuid, string args)
 {
-
-	Write(sockuid, "You: " + args + "\n");
+	Write(sockuid, "\033[33mYou gossip, \"" + args + "\"\033[39m\n");
 
 	string playerName = playerForSocket(sockuid)->name();
-	string msg = playerName + ": " + args + "\n";
+	string msg = "\033[33m" + playerName + " gossips, \"" + args + "\"\033[39m\n";
 
 	Broadcast(sockuid, msg);
 	
-	msg = "You: " + args + "\n";
+	msg = string(1, (char)INGAME);
 	return msg;
 }
 
+string quitCmd(string sockuid, string args)
+{
+	return string(1, (char)QUITTING);
+}
 
-
-static const size_t ncmd = 2; // remember to increment this when adding commands
+static const size_t ncmd = 3; // remember to increment this when adding commands
 static CommandPair commandPairs[ncmd] = // precedence is top down
 {
 	{ (const unsigned char*)"get\0", (void*)&getCmd, 1 },
-	{ (const unsigned char*)"gossip\0", (void*)&gossipCmd, 1 }
+	{ (const unsigned char*)"gossip\0", (void*)&gossipCmd, 1 },
+
+	{ (const unsigned char*)"quit\0", (void*)&quitCmd, 0 },
 };
 
 Trie* newTrieWithCommandList(size_t npairs, CommandPair cmdpairs[])
