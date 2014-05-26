@@ -1,0 +1,20 @@
+{
+  "author": "Joseph A Mark",
+  "name": "v8mud",
+  "description": "mud",
+  "version": "0.0.1",
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git@heroku.com:v8mud.git"
+  },
+  "scripts": {
+    "install": "node-gyp configure; node-gyp build"
+  },
+  "engines": {
+    "node"
+  },
+  "dependencies": {
+    "node-gyp"
+  },
+}

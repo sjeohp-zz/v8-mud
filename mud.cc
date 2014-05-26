@@ -34,6 +34,7 @@ string ProcessCommand(string sockuid, string msg)
 
 Handle<Value> ProcessInput(const Arguments& args)
 {
+	
     HandleScope handleScope;
 
     if (args.Length() < 1) {
