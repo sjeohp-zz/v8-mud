@@ -45,9 +45,10 @@ public:
 	}
 };
 
-Player::Player() {};
-
-static unordered_map<string, Player> PlayersInGame;
-static unordered_map<string, Player> PlayersAll;
+Player* playerForSocket(string sockuid);
+void setPlayerForSocket(string sockuid, Player player);
+void removePlayerFromGame(string name);
+bool checkPlayerExists(string name);
+Player playerForName(string name);
 
 #endif

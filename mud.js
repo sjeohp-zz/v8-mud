@@ -15,9 +15,9 @@ mud.setScrypt(scrypt);
 
 var sockets = [];
 
-function broadcast(from, msg){
+function broadcast(fromuid, msg){
 	sockets.forEach(function(socket){
-		if (socket !== from){
+		if (socket.uid !== fromuid){
 			socket.write(msg);
 		}
 	});

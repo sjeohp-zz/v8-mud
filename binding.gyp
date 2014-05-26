@@ -3,7 +3,7 @@
   "targets" : [
   {
     "target_name": "mud",
-    "sources": ["mud.cc"],
+    "sources": ["mud.cc", "src/commands.cc", "src/player.cc", "src/sockets.cc", "src/trie.cc", "src/scrypt.cc"],
     "include": ["src"],
     "conditions": [
       [ 'OS=="mac"', {
