@@ -55,3 +55,15 @@ Handle<Value> AddSocket(const Arguments& args)
 	
 	return handleScope.Close(Null());
 }
+
+void Write(string sockuid, string msg)
+{
+	Local<Context> context = Context::GetCurrent();
+	Handle<Object> global = context->Global();
+
+	Persistent<Object> socket = ActiveSockets[sockuid];
+	Handle<Object> write = socket->Get(String::New("write"))->ToObject();
+
+	Handle<Value> writeArgv[] = { String::New(msg.c_str()), String::New("utf8"), Null()};
+	write->CallAsFunction(global, 3, writeArgv);
+}

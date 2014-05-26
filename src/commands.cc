@@ -20,6 +20,9 @@ string getCmd(string sockuid, string args)
 
 string gossipCmd(string sockuid, string args)
 {
+
+	Write(sockuid, "You: " + args + "\n");
+
 	string playerName = playerForSocket(sockuid)->name();
 	string msg = playerName + ": " + args + "\n";
 
@@ -28,6 +31,8 @@ string gossipCmd(string sockuid, string args)
 	msg = "You: " + args + "\n";
 	return msg;
 }
+
+
 
 static const size_t ncmd = 2; // remember to increment this when adding commands
 static CommandPair commandPairs[ncmd] = // precedence is top down
