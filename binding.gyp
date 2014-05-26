@@ -12,6 +12,10 @@
           'OTHER_LDFLAGS': ['-stdlib=libc++'],
           'MACOSX_DEPLOYMENT_TARGET': '10.9'
         }
-      }]]
+      }],
+      [ 'OS=="linux"', {
+        "cflags": ["-std=c++11"]
+      }]
+    ]
   }]
 }
