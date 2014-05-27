@@ -1,36 +1,48 @@
 #include "player.h"
+#include "scrypt.h"
 
 #include <unordered_map>
 
 using namespace std;
 
+static unordered_map<SocketUID, Player> PlayersInGame;
+static unordered_map<PlayerName, Player> PlayersAll;
+
 Player::Player() {};
 
-static unordered_map<string, Player> PlayersInGame;
-static unordered_map<string, Player> PlayersAll;
-
-Player* playerForSocket(string sockuid)
+Player* playerForSocket(SocketUID sockuid)
 {
 	return &PlayersInGame[sockuid];
 }
 
-void setPlayerForSocket(string sockuid, Player player)
+void connectSocketToPlayer(SocketUID sockuid, PlayerName name)
 {
+	Player player = PlayersAll[name];
+	player.setSocketUID(sockuid);
 	PlayersInGame[sockuid] = player;
 }
 
-void removePlayerFromGame(string name)
+void connectSocketToNewPlayer(SocketUID sockuid, Player player)
 {
-	PlayersAll[name] = PlayersInGame[name];
-	PlayersInGame.erase(name);
+	player.setSocketUID(sockuid);
+	PlayersInGame[sockuid] = player;
 }
 
-bool checkPlayerExists(string name)
+void disconnectSocket(SocketUID sockuid)
+{
+	Player player = PlayersInGame[sockuid];
+	PlayersAll[player.name()] = player;
+	PlayersInGame.erase(sockuid);
+}
+
+bool checkPlayerExists(PlayerName name)
 {
 	return PlayersAll.count(name) > 0;
 }
 
-Player playerForName(string name)
+bool verifyPlayer(PlayerName name, string password)
 {
-	return PlayersAll[name];
+	Player player = PlayersAll[name];
+	string hash = player.passwordHash();
+	return VerifyPassword(hash, password);
 }

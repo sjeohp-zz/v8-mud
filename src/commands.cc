@@ -33,6 +33,7 @@ string gossipCmd(string sockuid, string args)
 
 string quitCmd(string sockuid, string args)
 {
+	disconnectSocket(sockuid);
 	return string(1, (char)QUITTING);
 }
 

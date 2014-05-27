@@ -5,6 +5,9 @@
 
 using namespace std;
 
+typedef string PlayerName;
+typedef string SocketUID;
+
 typedef enum 
 {
 	ZILCH 				= 0,
@@ -21,9 +24,9 @@ typedef enum
 class Player
 {
 private:
-	string name_;
+	PlayerName name_;
 	string password_hash_;
-	string sockuid_;
+	SocketUID sockuid_;
 public:
 	Player();
 	Player(string name, string hash)
@@ -39,17 +42,18 @@ public:
 	{
 		password_hash_ = password_hash;
 	}
-	string sockuid() const { return sockuid_; }
-	void setSockuid(string sockuid)
+	string socketUID() const { return sockuid_; }
+	void setSocketUID(string sockuid)
 	{
 		sockuid_ = sockuid;
 	}
 };
 
-Player* playerForSocket(string sockuid);
-void setPlayerForSocket(string sockuid, Player player);
-void removePlayerFromGame(string name);
-bool checkPlayerExists(string name);
-Player playerForName(string name);
+Player* playerForSocket(SocketUID sockuid);
+void connectSocketToPlayer(SocketUID sockuid, PlayerName name);
+void connectSocketToNewPlayer(SocketUID sockuid, Player player);
+void disconnectSocket(SocketUID sockuid);
+bool checkPlayerExists(PlayerName name);
+bool verifyPlayer(PlayerName name, string password);
 
 #endif

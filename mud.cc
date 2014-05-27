@@ -65,14 +65,11 @@ Handle<Value> ProcessInput(const Arguments& args)
 				res = msg + "? Is that your name?\n";
 			}
 		} else if (state == UNVERIFIED){
-			Player player = playerForName(ActiveNames[sockuid]);
-			Handle<String> hash = String::New(player.passwordHash().c_str());
-			Handle<String> key = String::New(msg.c_str());
-			if (VerifyPassword(hash, key)){
+			PlayerName name = ActiveNames[sockuid];
+			if (verifyPlayer(name, msg)){
+				connectSocketToPlayer(sockuid, name);
 				state = INGAME;
 				res = "Very well.\n";
-				player.setSockuid(sockuid);
-				setPlayerForSocket(sockuid, player);
 			} else {
 				res = "Wrong. Try again:\n";
 			}
@@ -81,26 +78,22 @@ Handle<Value> ProcessInput(const Arguments& args)
 				state = NAME_CONFIRMED;
 				res = "Choose a password:\n";
 			} else if (tolower(msg[0]) == 'n'){
+				ActiveNames.erase(sockuid);
 				state = UNNAMED;
 				res = "Who are you then?\n";
-				ActiveNames.erase(sockuid);
 			} else {
 				res = "Answer yes or no. Is your name " + ActiveNames[sockuid] + "?\n";
 			}
 		} else if (state == NAME_CONFIRMED){
-			string hash = string(*String::Utf8Value(HashPassword(String::New(msg.c_str()))));
-			UnconfirmedPasswords[sockuid] = hash;
+			string passwordHash = HashPassword(msg);
+			UnconfirmedPasswords[sockuid] = passwordHash;
 			state = PASSWORD_CHOSEN;
 			res = "Confirm your password:\n";
 		} else if (state == PASSWORD_CHOSEN){
-			Handle<String> hash = String::New(UnconfirmedPasswords[sockuid].c_str());
-			Handle<String> key = String::New(msg.c_str());
-			if (VerifyPassword(hash, key)){
+			if (VerifyPassword(UnconfirmedPasswords[sockuid], msg)){
+				connectSocketToNewPlayer(sockuid, Player(ActiveNames[sockuid], UnconfirmedPasswords[sockuid]));
 				state = PASSWORD_CONFIRMED;
 				res = "Very well.\n";
-				Player player = Player(ActiveNames[sockuid], string(*String::Utf8Value(hash)));
-				player.setSockuid(sockuid);
-				setPlayerForSocket(sockuid, player);
 			} else {
 				state = NAME_CONFIRMED;
 				res = "Passwords didn't match. Choose a password:\n";

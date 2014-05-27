@@ -30,29 +30,30 @@ Handle<Value> SetScrypt(const Arguments& args)
 	return handleScope.Close(Null());
 }
 
-Handle<String> HashPassword(Handle<String> key)
+string HashPassword(string key)
 {
 	Local<Context> context = Context::GetCurrent();
 	Handle<Object> global = context->Global();
 		
-	Handle<Object> hash = Scrypt->Get(String::New("hash"))->ToObject();
+	Handle<Object> hasher = Scrypt->Get(String::New("hash"))->ToObject();
 	Handle<Object> params = Scrypt->Get(String::New("params"))->ToObject();
 	Handle<Value> paramsArgv[] = { Number::New(0.1) };
 	Handle<Value> scryptParams = params->CallAsFunction(global, 1, paramsArgv);
 
-	Handle<Value> hashArgv[] = { key, scryptParams };
-	Handle<Value> result = hash->CallAsFunction(global, 2, hashArgv);
-
-	return result->ToString();
+	Handle<Value> hashArgv[] = { String::New(key.c_str()), scryptParams };
+	Handle<Value> hash = hasher->CallAsFunction(global, 2, hashArgv);
+	string result = string(*String::Utf8Value(hash->ToString()));
+	
+	return result;;
 }
 
-bool VerifyPassword(Handle<String> hash, Handle<String> key)
+bool VerifyPassword(string hash, string key)
 {
 	Local<Context> context = Context::GetCurrent();
 	Handle<Object> global = context->Global();
 
 	Handle<Object> verifyFunc = Scrypt->Get(String::New("verify"))->ToObject();
-	Handle<Value> verifyArgv[] = { hash, key };
+	Handle<Value> verifyArgv[] = { String::New(hash.c_str()), String::New(key.c_str()) };
 	Handle<Value> result = verifyFunc->CallAsFunction(global, 2, verifyArgv);
 
 	return result->ToBoolean()->Value();
