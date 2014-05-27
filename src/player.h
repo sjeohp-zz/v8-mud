@@ -2,11 +2,10 @@
 #define Mud_Player_h
 
 #include <string>
+#include <v8.h>
 
 using namespace std;
-
-typedef string PlayerName;
-typedef string SocketUID;
+using namespace v8;
 
 typedef enum 
 {
@@ -24,9 +23,9 @@ typedef enum
 class Player
 {
 private:
-	PlayerName name_;
+	string name_;
 	string password_hash_;
-	SocketUID sockuid_;
+	string sockuid_;
 public:
 	Player();
 	Player(string name, string hash)
@@ -47,13 +46,17 @@ public:
 	{
 		sockuid_ = sockuid;
 	}
+	string Serialize();
 };
 
-Player* playerForSocket(SocketUID sockuid);
-void connectSocketToPlayer(SocketUID sockuid, PlayerName name);
-void connectSocketToNewPlayer(SocketUID sockuid, Player player);
-void disconnectSocket(SocketUID sockuid);
-bool checkPlayerExists(PlayerName name);
-bool verifyPlayer(PlayerName name, string password);
+Handle<Value> SetDisconnect(const Arguments& args);
+Player* playerForSocket(string sockuid);
+void connectSocketToPlayer(string sockuid, string name);
+void connectSocketToNewPlayer(string sockuid, Player player);
+void disconnectSocket(string sockuid);
+bool checkPlayerExists(string name);
+bool verifyPlayer(string name, string password);
+Handle<Value> SavePlayers(const Arguments& args);
+Handle<Value> LoadPlayers(const Arguments& args);
 
 #endif
