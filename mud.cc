@@ -45,11 +45,11 @@ Handle<Value> ProcessInput(const Arguments& args)
       ThrowException(Exception::TypeError(String::New("Wrong arguments")));
       return handleScope.Close(Undefined());
 	}
-	
-	string 	str = string(*String::Utf8Value(args[0]->ToString()));
-	string 	sockuid = str.substr(0, 25);
-	int 	state = str.at(25);
-	string 	msg = str.substr(26);
+
+	string str = string(*String::Utf8Value(args[0]->ToString()));
+	string sockuid = str.substr(0, 25);
+	int state = str.at(25);
+	string msg = str.substr(26);
 	string 	res = "";
 	
 	if (state == INGAME){
@@ -65,7 +65,7 @@ Handle<Value> ProcessInput(const Arguments& args)
 				res = msg + "? Is that your name?\n";
 			}
 		} else if (state == UNVERIFIED){
-			PlayerName name = ActiveNames[sockuid];
+			string name = ActiveNames[sockuid];
 			if (verifyPlayer(name, msg)){
 				connectSocketToPlayer(sockuid, name);
 				state = INGAME;
@@ -116,6 +116,9 @@ void Init(Handle<Object> exports, Handle<Object> module)
 	exports->Set(String::NewSymbol("setScrypt"), FunctionTemplate::New(SetScrypt)->GetFunction());
 	exports->Set(String::NewSymbol("setBroadcast"), FunctionTemplate::New(SetBroadcast)->GetFunction());
 	exports->Set(String::NewSymbol("setWrite"), FunctionTemplate::New(SetWrite)->GetFunction());
+	exports->Set(String::NewSymbol("savePlayers"), FunctionTemplate::New(SavePlayers)->GetFunction());
+	exports->Set(String::NewSymbol("loadPlayers"), FunctionTemplate::New(LoadPlayers)->GetFunction());
+	exports->Set(String::NewSymbol("setDisconnect"), FunctionTemplate::New(SetDisconnect)->GetFunction());
 }
 
 NODE_MODULE(mud, Init)

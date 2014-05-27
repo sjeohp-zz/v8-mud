@@ -11,7 +11,6 @@ var net = require('net');
 var cuid = require('cuid');
 var scrypt = require('scrypt');
 var mud = require('./build/Release/mud');
-mud.setScrypt(scrypt);
 
 var sockets = {};
 
@@ -27,8 +26,14 @@ function write(sockuid, msg){
 	sockets[sockuid].write(msg);
 }
 
-mud.setBroadcast(broadcast);
-mud.setWrite(write);
+function disconnect(sockuid){
+	sockets[sockuid].end();
+	delete sockets[sockuid];
+}
+
+setInterval(function(){
+	mud.savePlayers();
+}, 60*2*1000);
 
 var server = net.createServer(function(socket) {
 	socket.setKeepAlive(true, 10000);
@@ -51,4 +56,9 @@ var server = net.createServer(function(socket) {
 	});
 }).listen(9000, function() {
 	console.log("Listening on port 9000");
+	mud.setScrypt(scrypt);
+	mud.setBroadcast(broadcast);
+	mud.setWrite(write);
+	mud.setDisconnect(disconnect);
+	mud.loadPlayers();
 });
