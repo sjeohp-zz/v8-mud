@@ -137,13 +137,18 @@ Handle<Value> LoadPlayers(const Arguments& args)
 		stringstream buffer;
 		buffer << file.rdbuf();
 		string str = buffer.str();
-		int c = str.find('{') + 1;
-		int n = str.find(',', c);
-		string name = str.substr(c, n-c);
-		c = n + 1;
-		n = str.find(',', c);
-		string pw = str.substr(c, n-c);
-		PlayersAll[name] = Player(name, pw);
+		unsigned long temp;
+		int c = 0;
+		int n = 0;
+		while ((temp = str.find('{', c)) != string::npos){
+			c = temp + 1;
+			n = str.find(',', c);
+			string name = str.substr(c, n-c);
+			c = n + 1;
+			n = str.find(',', c);
+			string pw = str.substr(c, n-c);
+			PlayersAll[name] = Player(name, pw);
+		}
 	}
 	return Null();
 }

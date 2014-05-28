@@ -119,6 +119,7 @@ void Init(Handle<Object> exports, Handle<Object> module)
 	exports->Set(String::NewSymbol("savePlayers"), FunctionTemplate::New(SavePlayers)->GetFunction());
 	exports->Set(String::NewSymbol("loadPlayers"), FunctionTemplate::New(LoadPlayers)->GetFunction());
 	exports->Set(String::NewSymbol("setDisconnect"), FunctionTemplate::New(SetDisconnect)->GetFunction());
+	exports->Set(String::NewSymbol("runBenchmarks"), FunctionTemplate::New(run_command_benchmarks)->GetFunction());
 }
 
 NODE_MODULE(mud, Init)

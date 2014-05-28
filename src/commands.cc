@@ -2,6 +2,7 @@
 #include "sockets.h"
 #include "trie.h"
 #include "player.h"
+#include "timestamp.h"
 
 using namespace std;
 using namespace v8;
@@ -62,4 +63,9 @@ Trie* Commands()
 		commands = newTrieWithCommandList(ncmd, commandPairs);
 	}
 	return commands;
+}
+
+Handle<Value> run_command_benchmarks(const Arguments& args)
+{
+	return Null();
 }

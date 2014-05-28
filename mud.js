@@ -23,7 +23,9 @@ function broadcast(fromuid, msg){
 }
 
 function write(sockuid, msg){
-	sockets[sockuid].write(msg);
+	if (sockets[sockuid]){
+		sockets[sockuid].write(msg);
+	}
 }
 
 function disconnect(sockuid){
@@ -61,4 +63,6 @@ var server = net.createServer(function(socket) {
 	mud.setWrite(write);
 	mud.setDisconnect(disconnect);
 	mud.loadPlayers();
+
+	// mud.runBenchmarks();
 });
