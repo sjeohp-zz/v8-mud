@@ -4,10 +4,10 @@
 #include <string>
 #include <v8.h>
 
-#include "room.h"
-
 using namespace std;
 using namespace v8;
+
+class Room;
 
 typedef enum 
 {
@@ -44,7 +44,9 @@ public:
 	void setPasswordHash(string password_hash) { password_hash_ = password_hash; }
 	string socketUID() const { return sockuid_; }
 	void setSocketUID(string sockuid) { sockuid_ = sockuid; }
-	
+	Room* room() const { return room_; }
+	Player* roomPlayersNext() const { return room_players_next_; }
+	Player* roomPlayersPrev() const { return room_players_prev_; }
 };
 
 Player* playerForSocket(string sockuid);
