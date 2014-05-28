@@ -15,22 +15,16 @@ static unordered_map<string, Player> PlayersAll;
 
 static Persistent<Object> DisconnectObj;
 
-Handle<Value> SetDisconnect(const Arguments& args)
-{
-	HandleScope handleScope;
-	
-	if (args.Length() < 1){
-		ThrowException(Exception::TypeError(String::New("Wrong number of arguments")));
-		return handleScope.Close(Undefined());
-    }
-    if (!args[0]->IsObject()) {
-    	ThrowException(Exception::TypeError(String::New("Wrong arguments")));
-    	return handleScope.Close(Undefined());
-	}
+Player::Player() {};
 
-	DisconnectObj = Persistent<Object>::New(args[0]->ToObject());
-	
-	return handleScope.Close(Null());
+string Player::Serialize()
+{
+	string str = 
+	"{" +
+	name_ + "," +
+	password_hash_ + "," +
+	"}";
+	return str;
 }
 
 Player* playerForSocket(string sockuid)
@@ -38,16 +32,24 @@ Player* playerForSocket(string sockuid)
 	return &PlayersInGame[sockuid];
 }
 
+bool checkPlayerExists(string name)
+{
+	return PlayersAll.count(name) > 0;
+}
+
+bool verifyPlayer(string name, string password)
+{
+	Player player = PlayersAll[name];
+	string hash = player.passwordHash();
+	return VerifyPassword(hash, password);
+}
+
 void connectSocketToPlayer(string sockuid, string name)
 {
 	Player player = PlayersAll[name];
 	for (auto it = PlayersInGame.begin(); it != PlayersInGame.end(); ++it){
 		if (it->second.name() == name){
-			Handle<Context> context = Context::GetCurrent();
-			Handle<Object> global = context->Global();
-			Handle<Value> argv[] = { String::New(it->second.socketUID().c_str()) };
-			DisconnectObj->CallAsFunction(global, 1, argv);
-			disconnectSocket(it->second.socketUID());
+			disconnectSocket(sockuid);
 		}
 	}
 	player.setSocketUID(sockuid);
@@ -67,33 +69,31 @@ void savePlayer(Player player)
 
 void disconnectSocket(string sockuid)
 {
-	Player player = PlayersInGame[sockuid];
-	savePlayer(player);
+	Handle<Context> context = Context::GetCurrent();
+	Handle<Object> global = context->Global();
+	Handle<Value> argv[] = { String::New(sockuid.c_str()) };
+	DisconnectObj->CallAsFunction(global, 1, argv);
+
+	savePlayer(*playerForSocket(sockuid));
 	PlayersInGame.erase(sockuid);
 }
 
-bool checkPlayerExists(string name)
+Handle<Value> SetDisconnect(const Arguments& args)
 {
-	return PlayersAll.count(name) > 0;
-}
+	HandleScope handleScope;
+	
+	if (args.Length() < 1){
+		ThrowException(Exception::TypeError(String::New("Wrong number of arguments")));
+		return handleScope.Close(Undefined());
+    }
+    if (!args[0]->IsObject()) {
+    	ThrowException(Exception::TypeError(String::New("Wrong arguments")));
+    	return handleScope.Close(Undefined());
+	}
 
-bool verifyPlayer(string name, string password)
-{
-	Player player = PlayersAll[name];
-	string hash = player.passwordHash();
-	return VerifyPassword(hash, password);
-}
-
-Player::Player() {};
-
-string Player::Serialize()
-{
-	string str = 
-	"{" +
-	name_ + "," +
-	password_hash_ + "," +
-	"}";
-	return str;
+	DisconnectObj = Persistent<Object>::New(args[0]->ToObject());
+	
+	return handleScope.Close(Null());
 }
 
 Handle<Value> SavePlayers(const Arguments& args)

@@ -7,7 +7,7 @@ typedef struct Trie
 	unsigned char abbrev_path;
 	int abbrev_end;
 	struct Trie* children['~' - '!'];
-} Trie;
+}	Trie;
 
 Trie* addKeyForValue(Trie* node, const unsigned char* key, void* value, int abbreviates);
 void* valueForKey(Trie* node, const unsigned char* key);

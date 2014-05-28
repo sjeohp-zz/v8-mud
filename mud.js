@@ -47,13 +47,13 @@ var server = net.createServer(function(socket) {
 	socket.on('data', function(chunk){
 		var str = socket.uid + socket.playerState + chunk.toString('utf-8').trim();
 		var res = mud.process(str);
-		socket.playerState = res.charAt(0);
-		socket.write(res.substring(1));
-		if (socket.playerState === String.fromCharCode(6)){
-			socket.playerState = mud.process(socket.uid + socket.playerState + "").charAt(0);
-		} else if (socket.playerState === String.fromCharCode(8)){
-			socket.end();
-			delete sockets[socket.uid];
+		var state = res.charAt(0);
+		if (state !== String.fromCharCode(9)){
+			socket.write(res.substring(1));
+			socket.playerState = state;
+			if (socket.playerState === String.fromCharCode(6)){
+				socket.playerState = mud.process(socket.uid + socket.playerState + "").charAt(0);
+			}
 		}
 	});
 }).listen(9000, function() {
@@ -63,6 +63,5 @@ var server = net.createServer(function(socket) {
 	mud.setWrite(write);
 	mud.setDisconnect(disconnect);
 	mud.loadPlayers();
-
 	// mud.runBenchmarks();
 });

@@ -4,15 +4,15 @@ static Persistent<Object> Scrypt;
 
 Handle<Value> SetScrypt(const Arguments& args)
 {
-	HandleScope handleScope;
+	HandleScope scope;
 	
 	if (args.Length() < 1){
 		ThrowException(Exception::TypeError(String::New("Wrong number of arguments")));
-		return handleScope.Close(Undefined());
+		return scope.Close(Undefined());
     }
     if (!args[0]->IsObject()) {
     	ThrowException(Exception::TypeError(String::New("Wrong arguments")));
-    	return handleScope.Close(Undefined());
+    	return scope.Close(Undefined());
 	}
 
 	Scrypt = Persistent<Object>::New(args[0]->ToObject());
@@ -27,7 +27,7 @@ Handle<Value> SetScrypt(const Arguments& args)
 	verifyConfig->Set(String::New("hashEncoding"), String::New("hex"));
 	verifyConfig->Set(String::New("keyEncoding"), String::New("utf8"));
 	
-	return handleScope.Close(Null());
+	return scope.Close(Null());
 }
 
 string HashPassword(string key)

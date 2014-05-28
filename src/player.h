@@ -17,7 +17,7 @@ typedef enum
 	PASSWORD_CHOSEN		= 5,
 	PASSWORD_CONFIRMED	= 6,
 	INGAME				= 7,
-	QUITTING			= 8
+	QUITTING			= 9
 }	PLAYER_STATE;
 
 class Player
@@ -49,13 +49,13 @@ public:
 	string Serialize();
 };
 
-Handle<Value> SetDisconnect(const Arguments& args);
 Player* playerForSocket(string sockuid);
+bool checkPlayerExists(string name);
+bool verifyPlayer(string name, string password);
 void connectSocketToPlayer(string sockuid, string name);
 void connectSocketToNewPlayer(string sockuid, Player player);
 void disconnectSocket(string sockuid);
-bool checkPlayerExists(string name);
-bool verifyPlayer(string name, string password);
+Handle<Value> SetDisconnect(const Arguments& args);
 Handle<Value> SavePlayers(const Arguments& args);
 Handle<Value> LoadPlayers(const Arguments& args);
 
