@@ -29,8 +29,10 @@ function write(sockuid, msg){
 }
 
 function disconnect(sockuid){
-	sockets[sockuid].end();
-	delete sockets[sockuid];
+	if (sockets[sockuid]){
+		sockets[sockuid].end();
+		delete sockets[sockuid];
+	}
 }
 
 setInterval(function(){
@@ -45,6 +47,14 @@ var server = net.createServer(function(socket) {
 	sockets[socket.uid] = socket;
 	socket.write("Who are you?\n");
 	socket.on('data', function(chunk){
+		if (chunk.toString('utf-8').charAt(0) === String.fromCharCode(4)){
+			console.log("----- EOT -----");
+			if (sockets[socket.uid]){
+				mud.removePlayerOnSocket(socket.uid);
+				delete sockets[socket.uid];
+			}
+			return;
+		}
 		var str = socket.uid + socket.playerState + chunk.toString('utf-8').trim();
 		var res = mud.process(str);
 		var state = res.charAt(0);
@@ -55,6 +65,15 @@ var server = net.createServer(function(socket) {
 				socket.playerState = mud.process(socket.uid + socket.playerState + "").charAt(0);
 			}
 		}
+	});
+	socket.on('end', function(){
+
+	});
+	socket.on('error', function(){
+
+	});
+	socket.on('close', function(){
+
 	});
 }).listen(9000, function() {
 	console.log("Listening on port 9000");

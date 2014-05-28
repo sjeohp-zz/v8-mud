@@ -4,6 +4,8 @@
 #include <string>
 #include <v8.h>
 
+#include "room.h"
+
 using namespace std;
 using namespace v8;
 
@@ -26,27 +28,23 @@ private:
 	string name_;
 	string password_hash_;
 	string sockuid_;
+	Room* room_;
+	Player* room_players_next_;
+	Player* room_players_prev_;
 public:
 	Player();
-	Player(string name, string hash)
-		:  name_(name), password_hash_(hash)
+	Player(string name, string hash) :  
+		name_(name), 
+		password_hash_(hash)
 		{};
-	string name() const { return name_; }
-	void setName(string name)
-	{
-		name_ = name;
-	}
-	string passwordHash() const { return password_hash_; }
-	void setPasswordHash(string password_hash)
-	{
-		password_hash_ = password_hash;
-	}
-	string socketUID() const { return sockuid_; }
-	void setSocketUID(string sockuid)
-	{
-		sockuid_ = sockuid;
-	}
 	string Serialize();
+	string name() const { return name_; }
+	void setName(string name) { name_ = name; }
+	string passwordHash() const { return password_hash_; }
+	void setPasswordHash(string password_hash) { password_hash_ = password_hash; }
+	string socketUID() const { return sockuid_; }
+	void setSocketUID(string sockuid) { sockuid_ = sockuid; }
+	
 };
 
 Player* playerForSocket(string sockuid);
@@ -54,8 +52,9 @@ bool checkPlayerExists(string name);
 bool verifyPlayer(string name, string password);
 void connectSocketToPlayer(string sockuid, string name);
 void connectSocketToNewPlayer(string sockuid, Player player);
-void disconnectSocket(string sockuid);
+void disconnectPlayerOnSocket(string sockuid);
 Handle<Value> SetDisconnect(const Arguments& args);
+Handle<Value> RemovePlayerOnSocket(const Arguments& args);
 Handle<Value> SavePlayers(const Arguments& args);
 Handle<Value> LoadPlayers(const Arguments& args);
 

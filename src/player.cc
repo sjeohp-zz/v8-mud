@@ -49,17 +49,21 @@ void connectSocketToPlayer(string sockuid, string name)
 	Player player = PlayersAll[name];
 	for (auto it = PlayersInGame.begin(); it != PlayersInGame.end(); ++it){
 		if (it->second.name() == name){
-			disconnectSocket(sockuid);
+			disconnectPlayerOnSocket(it->second.socketUID());
 		}
 	}
 	player.setSocketUID(sockuid);
 	PlayersInGame[sockuid] = player;
+
+	cout << player.name() << " entered." << endl;
 }
 
 void connectSocketToNewPlayer(string sockuid, Player player)
 {
 	player.setSocketUID(sockuid);
 	PlayersInGame[sockuid] = player;
+
+	cout << player.name() << " entered." << endl;
 }
 
 void savePlayer(Player player)
@@ -67,15 +71,22 @@ void savePlayer(Player player)
 	PlayersAll[player.name()] = player;
 }
 
-void disconnectSocket(string sockuid)
+void removePlayerFromGame(Player player)
+{
+	cout << player.name() << " left." << endl;
+
+	savePlayer(player);
+	PlayersInGame.erase(player.socketUID());
+}
+
+void disconnectPlayerOnSocket(string sockuid)
 {
 	Handle<Context> context = Context::GetCurrent();
 	Handle<Object> global = context->Global();
 	Handle<Value> argv[] = { String::New(sockuid.c_str()) };
 	DisconnectObj->CallAsFunction(global, 1, argv);
 
-	savePlayer(*playerForSocket(sockuid));
-	PlayersInGame.erase(sockuid);
+	removePlayerFromGame(*playerForSocket(sockuid));
 }
 
 Handle<Value> SetDisconnect(const Arguments& args)
@@ -94,6 +105,25 @@ Handle<Value> SetDisconnect(const Arguments& args)
 	DisconnectObj = Persistent<Object>::New(args[0]->ToObject());
 	
 	return handleScope.Close(Null());
+}
+
+Handle<Value> RemovePlayerOnSocket(const Arguments& args)
+{
+	HandleScope scope;
+	
+	if (args.Length() < 1){
+		ThrowException(Exception::TypeError(String::New("Wrong number of arguments")));
+		return scope.Close(Undefined());
+    }
+    if (!args[0]->IsString()) {
+    	ThrowException(Exception::TypeError(String::New("Wrong arguments")));
+    	return scope.Close(Undefined());
+	}
+
+	string sockuid = string(*String::Utf8Value(args[0]->ToString()));
+	removePlayerFromGame(*playerForSocket(sockuid));
+
+	return Null();
 }
 
 Handle<Value> SavePlayers(const Arguments& args)
