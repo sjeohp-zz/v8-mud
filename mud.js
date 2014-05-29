@@ -81,6 +81,5 @@ var server = net.createServer(function(socket) {
 	mud.setBroadcast(broadcast);
 	mud.setWrite(write);
 	mud.setDisconnect(disconnect);
-	mud.loadPlayers();
 	// mud.runBenchmarks();
 });

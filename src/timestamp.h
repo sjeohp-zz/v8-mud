@@ -5,7 +5,7 @@
 
 typedef unsigned long long timestamp;
 
-static timestamp get_timestamp()
+timestamp get_timestamp()
 {
 	struct timeval now;
 	gettimeofday (&now, NULL);

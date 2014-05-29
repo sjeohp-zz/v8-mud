@@ -40,9 +40,9 @@ CFLAGS_OBJC_Debug :=
 CFLAGS_OBJCC_Debug :=
 
 INCS_Debug := \
-	-I/Users/sjeohp/.node-gyp/0.10.22/src \
-	-I/Users/sjeohp/.node-gyp/0.10.22/deps/uv/include \
-	-I/Users/sjeohp/.node-gyp/0.10.22/deps/v8/include \
+	-I/Users/Joseph/.node-gyp/0.10.25/src \
+	-I/Users/Joseph/.node-gyp/0.10.25/deps/uv/include \
+	-I/Users/Joseph/.node-gyp/0.10.25/deps/v8/include \
 	-I$(srcdir)/frameworks
 
 DEFS_Release := \
@@ -81,9 +81,9 @@ CFLAGS_OBJC_Release :=
 CFLAGS_OBJCC_Release :=
 
 INCS_Release := \
-	-I/Users/sjeohp/.node-gyp/0.10.22/src \
-	-I/Users/sjeohp/.node-gyp/0.10.22/deps/uv/include \
-	-I/Users/sjeohp/.node-gyp/0.10.22/deps/v8/include \
+	-I/Users/Joseph/.node-gyp/0.10.25/src \
+	-I/Users/Joseph/.node-gyp/0.10.25/deps/uv/include \
+	-I/Users/Joseph/.node-gyp/0.10.25/deps/v8/include \
 	-I$(srcdir)/frameworks
 
 OBJS := \
@@ -92,7 +92,8 @@ OBJS := \
 	$(obj).target/$(TARGET)/src/player.o \
 	$(obj).target/$(TARGET)/src/sockets.o \
 	$(obj).target/$(TARGET)/src/trie.o \
-	$(obj).target/$(TARGET)/src/scrypt.o
+	$(obj).target/$(TARGET)/src/scrypt.o \
+	$(obj).target/$(TARGET)/src/room.o
 
 # Add to the list of files we specially track dependencies for.
 all_deps += $(OBJS)

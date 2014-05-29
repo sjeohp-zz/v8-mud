@@ -1,4 +1,5 @@
 #include "player.h"
+#include "room.h"
 #include "scrypt.h"
 
 #include <unordered_map>
@@ -14,18 +15,6 @@ static unordered_map<string, Player> PlayersInGame;
 static unordered_map<string, Player> PlayersAll;
 
 static Persistent<Object> DisconnectObj;
-
-Player::Player() {};
-
-string Player::Serialize()
-{
-	string str = 
-	"{" +
-	name_ + "," +
-	password_hash_ + "," +
-	"}";
-	return str;
-}
 
 Player* playerForSocket(string sockuid)
 {
@@ -52,8 +41,12 @@ void connectSocketToPlayer(string sockuid, string name)
 			disconnectPlayerOnSocket(it->second.socketUID());
 		}
 	}
+	
+	cout << " player " << endl;
 	player.setSocketUID(sockuid);
 	PlayersInGame[sockuid] = player;
+	player.room()->addPlayer(&PlayersInGame[sockuid]);
+	cout << " player 1 " << endl;
 
 	cout << player.name() << " entered." << endl;
 }
@@ -62,6 +55,7 @@ void connectSocketToNewPlayer(string sockuid, Player player)
 {
 	player.setSocketUID(sockuid);
 	PlayersInGame[sockuid] = player;
+	player.room()->addPlayer(&PlayersInGame[sockuid]);
 
 	cout << player.name() << " entered." << endl;
 }
@@ -155,7 +149,7 @@ Handle<Value> SavePlayers(const Arguments& args)
     return Null();
 }
 
-Handle<Value> LoadPlayers(const Arguments& args)
+void loadPlayers()
 {
 	stringstream tb;
 	ifstream tf("./savefiles/LastSaveTime.txt", ios::in);
@@ -177,8 +171,29 @@ Handle<Value> LoadPlayers(const Arguments& args)
 			c = n + 1;
 			n = str.find(',', c);
 			string pw = str.substr(c, n-c);
-			PlayersAll[name] = Player(name, pw);
+			Player player = Player(name, pw);
+			PlayersAll[name] = player;
 		}
 	}
-	return Null();
+}
+
+Player::Player() {};
+
+Player::Player(string name, string hash) 
+: name_(name), password_hash_(hash)
+{
+	room_players_next_ = this;
+	room_players_prev_ = this;
+	room_ = roomAt(0);
+	savePlayer(*this);
+};
+
+string Player::Serialize()
+{
+	string str = 
+	"{" +
+	name_ + "," +
+	password_hash_ + "," +
+	"}";
+	return str;
 }

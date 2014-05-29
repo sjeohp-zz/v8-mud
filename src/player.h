@@ -8,8 +8,9 @@ using namespace std;
 using namespace v8;
 
 class Room;
+Room* roomAt(long rnum);
 
-typedef enum 
+enum PLAYER_STATE
 {
 	ZILCH 				= 0,
 	UNNAMED 			= 1,
@@ -20,7 +21,7 @@ typedef enum
 	PASSWORD_CONFIRMED	= 6,
 	INGAME				= 7,
 	QUITTING			= 9
-}	PLAYER_STATE;
+};
 
 class Player
 {
@@ -33,10 +34,7 @@ private:
 	Player* room_players_prev_;
 public:
 	Player();
-	Player(string name, string hash) :  
-		name_(name), 
-		password_hash_(hash)
-		{};
+	Player(string name, string hash);
 	string Serialize();
 	string name() const { return name_; }
 	void setName(string name) { name_ = name; }
@@ -45,8 +43,11 @@ public:
 	string socketUID() const { return sockuid_; }
 	void setSocketUID(string sockuid) { sockuid_ = sockuid; }
 	Room* room() const { return room_; }
+	void setRoom(Room* ptr) { room_ = ptr; }
 	Player* roomPlayersNext() const { return room_players_next_; }
+	void setRoomPlayersNext(Player* ptr) { room_players_next_ = ptr; }
 	Player* roomPlayersPrev() const { return room_players_prev_; }
+	void setRoomPlayersPrev(Player* ptr) { room_players_prev_ = ptr; }
 };
 
 Player* playerForSocket(string sockuid);
@@ -58,6 +59,6 @@ void disconnectPlayerOnSocket(string sockuid);
 Handle<Value> SetDisconnect(const Arguments& args);
 Handle<Value> RemovePlayerOnSocket(const Arguments& args);
 Handle<Value> SavePlayers(const Arguments& args);
-Handle<Value> LoadPlayers(const Arguments& args);
+void loadPlayers();
 
 #endif

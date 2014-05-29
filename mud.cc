@@ -5,6 +5,7 @@
 #include <v8.h>
 
 #include "src/player.h"
+#include "src/room.h"
 #include "src/commands.h"
 #include "src/sockets.h"
 #include "src/trie.h"
@@ -34,6 +35,7 @@ string processConnection(string sockuid, int state, string msg)
 {
 	string res;
 	if (state == UNNAMED){
+		msg[0] = toupper(msg[0]);
 		ActiveNames[sockuid] = msg;
 		if (checkPlayerExists(msg)){
 			state = UNVERIFIED;
@@ -78,7 +80,7 @@ string processConnection(string sockuid, int state, string msg)
 			UnconfirmedPasswords.erase(sockuid);
 		}
 	} else if (state == PASSWORD_CONFIRMED){
-	// char creation?
+		// char creation?
 		state = INGAME;
 	}
 	res.insert(0, 1, (char)state);
@@ -114,6 +116,11 @@ Handle<Value> ProcessInput(const Arguments& args)
     return scope.Close(String::New(res.c_str()));
 }
 
+Handle<Value> RunBenchmarks(const Arguments& args)
+{
+	return Null();
+}
+
 void Init(Handle<Object> exports, Handle<Object> module) 
 {
 	exports->Set(String::NewSymbol("process"), FunctionTemplate::New(ProcessInput)->GetFunction());
@@ -121,10 +128,12 @@ void Init(Handle<Object> exports, Handle<Object> module)
 	exports->Set(String::NewSymbol("setBroadcast"), FunctionTemplate::New(SetBroadcast)->GetFunction());
 	exports->Set(String::NewSymbol("setWrite"), FunctionTemplate::New(SetWrite)->GetFunction());
 	exports->Set(String::NewSymbol("savePlayers"), FunctionTemplate::New(SavePlayers)->GetFunction());
-	exports->Set(String::NewSymbol("loadPlayers"), FunctionTemplate::New(LoadPlayers)->GetFunction());
 	exports->Set(String::NewSymbol("setDisconnect"), FunctionTemplate::New(SetDisconnect)->GetFunction());
 	exports->Set(String::NewSymbol("removePlayerOnSocket"), FunctionTemplate::New(RemovePlayerOnSocket)->GetFunction());
-	exports->Set(String::NewSymbol("runBenchmarks"), FunctionTemplate::New(run_command_benchmarks)->GetFunction());
+	exports->Set(String::NewSymbol("runBenchmarks"), FunctionTemplate::New(RunBenchmarks)->GetFunction());
+
+	loadRooms(); // should come before players
+	loadPlayers();
 }
 
 NODE_MODULE(mud, Init)
