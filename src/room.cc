@@ -18,7 +18,7 @@ Room::Room()
 void Room::addPlayer(Player* player_ptr) 
 { 
 	if (!phead_){
-		player_ptr = phead_;
+		phead_ = player_ptr;
 	}
 	player_ptr->setRoomPlayersNext(phead_);
 	player_ptr->setRoomPlayersPrev(phead_->roomPlayersPrev());

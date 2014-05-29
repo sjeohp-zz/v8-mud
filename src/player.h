@@ -29,7 +29,7 @@ private:
 	string name_;
 	string password_hash_;
 	string sockuid_;
-	Room* room_;
+	long rnum_;
 	Player* room_players_next_;
 	Player* room_players_prev_;
 public:
@@ -42,8 +42,8 @@ public:
 	void setPasswordHash(string password_hash) { password_hash_ = password_hash; }
 	string socketUID() const { return sockuid_; }
 	void setSocketUID(string sockuid) { sockuid_ = sockuid; }
-	Room* room() const { return room_; }
-	void setRoom(Room* ptr) { room_ = ptr; }
+	Room* room() const { return roomAt(rnum_); }
+	void setRoom(Room* room);
 	Player* roomPlayersNext() const { return room_players_next_; }
 	void setRoomPlayersNext(Player* ptr) { room_players_next_ = ptr; }
 	Player* roomPlayersPrev() const { return room_players_prev_; }

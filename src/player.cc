@@ -42,11 +42,9 @@ void connectSocketToPlayer(string sockuid, string name)
 		}
 	}
 	
-	cout << " player " << endl;
 	player.setSocketUID(sockuid);
 	PlayersInGame[sockuid] = player;
 	player.room()->addPlayer(&PlayersInGame[sockuid]);
-	cout << " player 1 " << endl;
 
 	cout << player.name() << " entered." << endl;
 }
@@ -184,9 +182,14 @@ Player::Player(string name, string hash)
 {
 	room_players_next_ = this;
 	room_players_prev_ = this;
-	room_ = roomAt(0);
+	rnum_ = roomAt(0)->rnum();
 	savePlayer(*this);
 };
+
+void Player::setRoom(Room* room)
+ { 
+ 	rnum_ = room->rnum(); 
+ }
 
 string Player::Serialize()
 {

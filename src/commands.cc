@@ -45,17 +45,15 @@ string cmdLook(string sockuid, string args)
 
 string cmdSay(string sockuid, string args)
 {
-	Write(sockuid, "\033[37mYou say, \"" + args + "\"\033[39m\n");
+	Write(sockuid, "\033[97mYou say, \"" + args + "\"\033[39m\n");
 
 	Player* pl = playerForSocket(sockuid);
 	string playerName = pl->name();
-	string msg = "\033[37m" + playerName + " says, \"" + args + "\"\033[39m\n";
+	string msg = "\033[97m" + playerName + " says, \"" + args + "\"\033[39m\n";
 	
 	Player* curr = pl->roomPlayersNext();
-	cout << "curr" << endl;
 	while (curr != pl){
 		Write(curr->socketUID(), msg);
-		cout << "write" << endl;
 		curr = curr->roomPlayersNext();
 	}
 
