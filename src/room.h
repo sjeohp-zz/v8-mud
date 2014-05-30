@@ -15,7 +15,7 @@ private:
 	string name_;
 	string desc_;
 	Player* phead_;
-	Room* exits_[6];
+	long exits_[6];
 public:
 	Room();
 
@@ -31,20 +31,17 @@ public:
 	void addPlayer(Player* player_ptr);
 	int removePlayerWithName(string name);
 
-	Room* north() const { return exits_[0]; }
-	void setNorth(Room* ptr) { exits_[0] = ptr; }
-	Room* east() const { return exits_[1]; }
-	void setEast(Room* ptr) { exits_[1] = ptr; }
-	Room* south() const { return exits_[2]; }
-	void setSouth(Room* ptr) { exits_[2] = ptr; }
-	Room* west() const { return exits_[3]; }
-	void setWest(Room* ptr) { exits_[3] = ptr; }
-	Room* up() const { return exits_[4]; }
-	void setUp(Room* ptr) { exits_[4] = ptr; }
-	Room* down() const { return exits_[5]; }
-	void setDown(Room* ptr) { exits_[5] = ptr; }
+	Room* north() const;
+	Room* east() const;
+	Room* south() const;
+	Room* west() const;
+	Room* up() const;
+	Room* down() const;
+	void setExit(int dir, long rnum);
 
-	string exits() const 
+	long* exits() { return exits_; }
+
+	string exitstr() const 
 	{ 
 		string str = "[ Exits: ";
 		if (exits_[0]){

@@ -1,4 +1,5 @@
 #include "sockets.h"
+#include "player.h"
 
 #include <string>
 #include <unordered_map>
@@ -61,4 +62,27 @@ void Write(string sockuid, string msg)
 
 	Handle<Value> argv[] = { String::New(sockuid.c_str()), String::New(msg.c_str()) };
 	WriteObj->CallAsFunction(global, 2, argv);
+}
+
+void Echo(string sockuid, string msg)
+{
+	Player* pl = playerForSocket(sockuid);
+	Player* curr = pl;
+	while (1){
+		Write(curr->socketUID(), msg);
+		curr = curr->roomPlayersNext();
+		if (curr == pl){
+			break;
+		}
+	}
+}
+
+void EchoAround(string sockuid, string msg)
+{
+	Player* pl = playerForSocket(sockuid);
+	Player* curr = pl->roomPlayersNext();
+	while (curr != pl){
+		Write(curr->socketUID(), msg);
+		curr = curr->roomPlayersNext();
+	}
 }

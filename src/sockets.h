@@ -12,5 +12,7 @@ void Broadcast(string sockuid, string msg);
 Handle<Value> AddSocket(const Arguments& args);
 void Write(string sockuid, string msg);
 Handle<Value> SetWrite(const Arguments& args);
+void Echo(string sockuid, string msg);
+void EchoAround(string sockuid, string msg);
 
 #endif

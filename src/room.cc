@@ -7,10 +7,13 @@
 
 using namespace std;
 
-static vector<Room> RoomsAll;
+static vector<Room> RoomsAll(100);
 
 Room::Room()
 {
+	rnum_ = 0;
+	name_ = "The Void";
+	desc_ = "There is nothing here.";
 	phead_ = 0;
 	memset(exits_, 0, sizeof(Room*)*6);
 };
@@ -58,9 +61,28 @@ void loadRooms()
 {
 	if (RoomsAll.empty()){
 		Room rm = Room();
-		rm.setRnum(0);
+		RoomsAll.push_back(rm);
+	}
+	if (RoomsAll.size() < 2){
+		Room rm = Room();
+		rm.setRnum(1);
 		rm.setName("Lobby");
 		rm.setDesc("There is nothing here.");
 		RoomsAll.push_back(rm);
 	}
+}
+
+Room* Room::north() const { return roomAt(exits_[0]); }
+Room* Room::east() const { return roomAt(exits_[1]); }
+Room* Room::south() const { return roomAt(exits_[2]); }
+Room* Room::west() const { return roomAt(exits_[3]); }
+Room* Room::up() const { return roomAt(exits_[4]); }
+Room* Room::down() const { return roomAt(exits_[5]); }
+
+void Room::setExit(int dir, long rnum) 
+{ 
+	if (!roomAt(rnum)){
+		RoomsAll.at(rnum) = Room();
+	}
+	exits_[dir] = rnum; 
 }

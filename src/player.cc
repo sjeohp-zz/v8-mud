@@ -182,7 +182,7 @@ Player::Player(string name, string hash)
 {
 	room_players_next_ = this;
 	room_players_prev_ = this;
-	rnum_ = roomAt(0)->rnum();
+	rnum_ = roomAt(1)->rnum();
 	savePlayer(*this);
 };
 
