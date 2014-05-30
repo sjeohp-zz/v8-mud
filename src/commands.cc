@@ -20,6 +20,140 @@ typedef struct CommandPair
 static map<char, int> DirectionMap = { {'n', 0}, {'e', 1}, {'s', 2}, {'w', 3}, {'u', 4}, {'d', 5} };
 static map<char, int> InverseDirectionMap = { {'n', 2}, {'e', 3}, {'s', 0}, {'w', 1}, {'u', 5}, {'d', 4} };
 
+string cmdNorth(string sockuid, string args);
+string cmdEast(string sockuid, string args);
+string cmdSouth(string sockuid, string args);
+string cmdWest(string sockuid, string args);
+string cmdUp(string sockuid, string args);
+string cmdDown(string sockuid, string args);
+string cmdBuild(string sockuid, string args);
+string cmdBuildTilde(string sockuid, string args);
+string cmdGet(string sockuid, string args);
+string cmdGossip(string sockuid, string args);
+string cmdLook(string sockuid, string args);
+string cmdSay(string sockuid, string args);
+string cmdQuit(string sockuid, string args);
+
+string cmdNorth(string sockuid, string args)
+{
+	Player* pl = playerForSocket(sockuid);
+	Room* fromRm = pl->room();
+
+	if (!fromRm->north()){
+		Write(sockuid, "You can't go that way.\n");
+		return string(1, (char)INGAME);
+	}
+
+	EchoAround(sockuid, pl->name() + " leaves north.\n");
+
+	Room* toRm = fromRm->north();
+	fromRm->removePlayerWithName(pl->name());
+	toRm->addPlayer(pl);
+
+	string res = cmdLook(sockuid, args);
+	return res;
+}
+
+string cmdEast(string sockuid, string args)
+{
+	Player* pl = playerForSocket(sockuid);
+	Room* fromRm = pl->room();
+
+	if (!fromRm->east()){
+		Write(sockuid, "You can't go that way.\n");
+		return string(1, (char)INGAME);
+	}
+
+	EchoAround(sockuid, pl->name() + " leaves east.\n");
+
+	Room* toRm = fromRm->east();
+	fromRm->removePlayerWithName(pl->name());
+	toRm->addPlayer(pl);
+
+	string res = cmdLook(sockuid, args);
+	return res;
+}
+
+string cmdSouth(string sockuid, string args)
+{
+	Player* pl = playerForSocket(sockuid);
+	Room* fromRm = pl->room();
+
+	if (!fromRm->south()){
+		Write(sockuid, "You can't go that way.\n");
+		return string(1, (char)INGAME);
+	}
+
+	EchoAround(sockuid, pl->name() + " leaves south.\n");
+
+	Room* toRm = fromRm->south();
+	fromRm->removePlayerWithName(pl->name());
+	toRm->addPlayer(pl);
+
+	string res = cmdLook(sockuid, args);
+	return res;
+}
+
+string cmdWest(string sockuid, string args)
+{
+	Player* pl = playerForSocket(sockuid);
+	Room* fromRm = pl->room();
+
+	if (!fromRm->west()){
+		Write(sockuid, "You can't go that way.\n");
+		return string(1, (char)INGAME);
+	}
+
+	EchoAround(sockuid, pl->name() + " leaves west.\n");
+
+	Room* toRm = fromRm->west();
+	fromRm->removePlayerWithName(pl->name());
+	toRm->addPlayer(pl);
+
+	string res = cmdLook(sockuid, args);
+	return res;
+}
+
+string cmdUp(string sockuid, string args)
+{
+	Player* pl = playerForSocket(sockuid);
+	Room* fromRm = pl->room();
+
+	if (!fromRm->up()){
+		Write(sockuid, "You can't go that way.\n");
+		return string(1, (char)INGAME);
+	}
+
+	EchoAround(sockuid, pl->name() + " leaves up.\n");
+
+	Room* toRm = fromRm->up();
+	fromRm->removePlayerWithName(pl->name());
+	toRm->addPlayer(pl);
+
+	string res = cmdLook(sockuid, args);
+	return res;
+}
+
+string cmdDown(string sockuid, string args)
+{
+	Player* pl = playerForSocket(sockuid);
+	Room* fromRm = pl->room();
+
+	if (!fromRm->down()){
+		Write(sockuid, "You can't go that way.\n");
+		return string(1, (char)INGAME);
+	}
+
+	EchoAround(sockuid, pl->name() + " leaves down.\n");
+
+	Room* toRm = fromRm->down();
+	fromRm->removePlayerWithName(pl->name());
+	toRm->addPlayer(pl);
+
+	string res = cmdLook(sockuid, args);
+	return res;
+}
+
 string cmdBuild(string sockuid, string args)
 {
 	Room* fromRm = playerForSocket(sockuid)->room();
@@ -84,6 +218,10 @@ string cmdBuildTilde(string sockuid, string args)
 	}
 
 	int rnum = stol(args.substr(dirend+1));
+	if (!roomAt(rnum)){
+		res += "That destination is out of bounds.\n";
+		return res;
+	}
 	Room* toRm = roomAt(rnum);
 
 	fromRm->setExit(dir, rnum);
@@ -126,7 +264,14 @@ string cmdLook(string sockuid, string args)
 	string rmname = "\033[96m" + player->room()->name() + "\033[39m\n";
 	string rmexits = "\033[92m" + player->room()->exitstr() + "\033[39m\n";
 	string rmdesc = "\033[32m" + player->room()->desc() + "\033[39m\n";
-	string msg = string(1, (char)INGAME) + rmname + rmexits + rmdesc;
+	string players = "\033[36m";
+	Player* curr = player->roomPlayersNext();
+	while (curr != player){
+		players += curr->name() + " is here.\n";
+		curr = curr->roomPlayersNext();
+	}
+	players += "\033[39m";
+	string msg = string(1, (char)INGAME) + rmname + rmexits + rmdesc + players;
 	return msg;
 }
 
@@ -152,12 +297,12 @@ string cmdQuit(string sockuid, string args)
 static const size_t ncmd = 13; // remember to increment this when adding commands
 static CommandPair commandPairs[ncmd] = // precedence is top down
 {
-	{ (const unsigned char*)"north\0", (void*)1, 1 },
-	{ (const unsigned char*)"east\0", (void*)1, 1 },
-	{ (const unsigned char*)"south\0", (void*)1, 1 },
-	{ (const unsigned char*)"west\0", (void*)1, 1 },
-	{ (const unsigned char*)"up\0", (void*)1, 1 },
-	{ (const unsigned char*)"down\0", (void*)1, 1 },
+	{ (const unsigned char*)"north\0", (void*)&cmdNorth, 1 },
+	{ (const unsigned char*)"east\0", (void*)&cmdEast, 1 },
+	{ (const unsigned char*)"south\0", (void*)&cmdSouth, 1 },
+	{ (const unsigned char*)"west\0", (void*)&cmdWest, 1 },
+	{ (const unsigned char*)"up\0", (void*)&cmdUp, 1 },
+	{ (const unsigned char*)"down\0", (void*)&cmdDown, 1 },
 
 	{ (const unsigned char*)"build\0", (void*)&cmdBuild, 0 },
 	{ (const unsigned char*)"build~\0", (void*)&cmdBuildTilde, 0 },

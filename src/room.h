@@ -18,6 +18,7 @@ private:
 	long exits_[6];
 public:
 	Room();
+	Room(long rnum);
 
 	long rnum() const { return rnum_; }
 	void setRnum(long rnum) { rnum_ = rnum; }
@@ -29,7 +30,7 @@ public:
 	void setDesc(string desc) { desc_ = desc; }
 
 	void addPlayer(Player* player_ptr);
-	int removePlayerWithName(string name);
+	void removePlayerWithName(string name);
 
 	Room* north() const;
 	Room* east() const;
@@ -41,33 +42,7 @@ public:
 
 	long* exits() { return exits_; }
 
-	string exitstr() const 
-	{ 
-		string str = "[ Exits: ";
-		if (exits_[0]){
-			str += "n ";
-		}
-		if (exits_[1]){
-			str += "e ";
-		}
-		if (exits_[2]){
-			str += "s ";
-		}
-		if (exits_[3]){
-			str += "w ";
-		}
-		if (exits_[4]){
-			str += "u ";
-		}
-		if (exits_[5]){
-			str += "d ";
-		}
-		str += "]";
-		if (str.size() < 11){
-			str = "[ No exits ]";
-		}
-		return str;
-	}
+	string exitstr() const;
 };
 
 Room* roomAt(long rnum);
