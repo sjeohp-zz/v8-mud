@@ -29,6 +29,8 @@ public:
 	string desc() const { return desc_; }
 	void setDesc(string desc) { desc_ = desc; }
 
+	Player* phead() const { return phead_; }
+
 	void addPlayer(Player* player_ptr);
 	void removePlayerWithName(string name);
 

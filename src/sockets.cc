@@ -1,5 +1,6 @@
 #include "sockets.h"
 #include "player.h"
+#include "room.h"
 
 #include <string>
 #include <unordered_map>
@@ -64,11 +65,11 @@ void Write(string sockuid, string msg)
 	WriteObj->CallAsFunction(global, 2, argv);
 }
 
-void Echo(string sockuid, string msg)
+void Echo(Room* rm, string msg)
 {
-	Player* pl = playerForSocket(sockuid);
+	Player* pl = rm->phead();
 	Player* curr = pl;
-	while (1){
+	while (curr){
 		Write(curr->socketUID(), msg);
 		curr = curr->roomPlayersNext();
 		if (curr == pl){

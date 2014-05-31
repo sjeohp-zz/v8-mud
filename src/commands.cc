@@ -34,127 +34,62 @@ string cmdLook(string sockuid, string args);
 string cmdSay(string sockuid, string args);
 string cmdQuit(string sockuid, string args);
 
-string cmdNorth(string sockuid, string args)
+void moveDir(string sockuid, string dir)
 {
 	Player* pl = playerForSocket(sockuid);
 	Room* fromRm = pl->room();
 
-	if (!fromRm->north()){
+	int d = DirectionMap[dir[0]];
+
+	if (!fromRm->exits()[d]){
 		Write(sockuid, "You can't go that way.\n");
-		return string(1, (char)INGAME);
+		return;
 	}
 
-	EchoAround(sockuid, pl->name() + " leaves north.\n");
+	EchoAround(sockuid, pl->name() + " leaves " + dir + ".\n");
 
-	Room* toRm = fromRm->north();
+	Room* toRm = roomAt(fromRm->exits()[d]);
 	fromRm->removePlayerWithName(pl->name());
 	toRm->addPlayer(pl);
+}
 
-	string res = cmdLook(sockuid, args);
-	return res;
+string cmdNorth(string sockuid, string args)
+{
+	moveDir(sockuid, "north");
+	return cmdLook(sockuid, args);
 }
 
 string cmdEast(string sockuid, string args)
 {
-	Player* pl = playerForSocket(sockuid);
-	Room* fromRm = pl->room();
-
-	if (!fromRm->east()){
-		Write(sockuid, "You can't go that way.\n");
-		return string(1, (char)INGAME);
-	}
-
-	EchoAround(sockuid, pl->name() + " leaves east.\n");
-
-	Room* toRm = fromRm->east();
-	fromRm->removePlayerWithName(pl->name());
-	toRm->addPlayer(pl);
-
-	string res = cmdLook(sockuid, args);
-	return res;
+	moveDir(sockuid, "east");
+	return cmdLook(sockuid, args);
 }
 
 string cmdSouth(string sockuid, string args)
 {
-	Player* pl = playerForSocket(sockuid);
-	Room* fromRm = pl->room();
-
-	if (!fromRm->south()){
-		Write(sockuid, "You can't go that way.\n");
-		return string(1, (char)INGAME);
-	}
-
-	EchoAround(sockuid, pl->name() + " leaves south.\n");
-
-	Room* toRm = fromRm->south();
-	fromRm->removePlayerWithName(pl->name());
-	toRm->addPlayer(pl);
-
-	string res = cmdLook(sockuid, args);
-	return res;
+	moveDir(sockuid, "south");
+	return cmdLook(sockuid, args);
 }
 
 string cmdWest(string sockuid, string args)
 {
-	Player* pl = playerForSocket(sockuid);
-	Room* fromRm = pl->room();
-
-	if (!fromRm->west()){
-		Write(sockuid, "You can't go that way.\n");
-		return string(1, (char)INGAME);
-	}
-
-	EchoAround(sockuid, pl->name() + " leaves west.\n");
-
-	Room* toRm = fromRm->west();
-	fromRm->removePlayerWithName(pl->name());
-	toRm->addPlayer(pl);
-
-	string res = cmdLook(sockuid, args);
-	return res;
+	moveDir(sockuid, "west");
+	return cmdLook(sockuid, args);
 }
 
 string cmdUp(string sockuid, string args)
 {
-	Player* pl = playerForSocket(sockuid);
-	Room* fromRm = pl->room();
-
-	if (!fromRm->up()){
-		Write(sockuid, "You can't go that way.\n");
-		return string(1, (char)INGAME);
-	}
-
-	EchoAround(sockuid, pl->name() + " leaves up.\n");
-
-	Room* toRm = fromRm->up();
-	fromRm->removePlayerWithName(pl->name());
-	toRm->addPlayer(pl);
-
-	string res = cmdLook(sockuid, args);
-	return res;
+	moveDir(sockuid, "up");
+	return cmdLook(sockuid, args);
 }
 
 string cmdDown(string sockuid, string args)
 {
-	Player* pl = playerForSocket(sockuid);
-	Room* fromRm = pl->room();
-
-	if (!fromRm->down()){
-		Write(sockuid, "You can't go that way.\n");
-		return string(1, (char)INGAME);
-	}
-
-	EchoAround(sockuid, pl->name() + " leaves down.\n");
-
-	Room* toRm = fromRm->down();
-	fromRm->removePlayerWithName(pl->name());
-	toRm->addPlayer(pl);
-
-	string res = cmdLook(sockuid, args);
-	return res;
+	moveDir(sockuid, "down");
+	return cmdLook(sockuid, args);
 }
 
-string cmdBuild(string sockuid, string args)
+string cmdTunnelOneWay(string sockuid, string args)
 {
 	Room* fromRm = playerForSocket(sockuid)->room();
 
@@ -190,7 +125,7 @@ string cmdBuild(string sockuid, string args)
 	return res;
 }
 
-string cmdBuildTilde(string sockuid, string args)
+string cmdTunnelBothWays(string sockuid, string args)
 {
 	Room* fromRm = playerForSocket(sockuid)->room();
 
@@ -304,15 +239,15 @@ static CommandPair commandPairs[ncmd] = // precedence is top down
 	{ (const unsigned char*)"up\0", (void*)&cmdUp, 1 },
 	{ (const unsigned char*)"down\0", (void*)&cmdDown, 1 },
 
-	{ (const unsigned char*)"build\0", (void*)&cmdBuild, 0 },
-	{ (const unsigned char*)"build~\0", (void*)&cmdBuildTilde, 0 },
-
 	{ (const unsigned char*)"get\0", (void*)&cmdGet, 1 },
 	{ (const unsigned char*)"gossip\0", (void*)&cmdGossip, 1 },
 
 	{ (const unsigned char*)"look\0", (void*)&cmdLook, 1 },
 
 	{ (const unsigned char*)"say\0", (void*)&cmdSay, 1 },
+
+	{ (const unsigned char*)"tunnel\0", (void*)&cmdTunnelOneWay, 0 },
+	{ (const unsigned char*)"tunnel~\0", (void*)&cmdTunnelBothWays, 0 },
 	
 	{ (const unsigned char*)"quit\0", (void*)&cmdQuit, 0 },
 };

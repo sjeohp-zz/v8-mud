@@ -186,10 +186,8 @@ Player::Player(string name, string hash)
 	savePlayer(*this);
 };
 
-void Player::setRoom(Room* room)
- { 
- 	rnum_ = room->rnum(); 
- }
+Room* Player::room() const { return roomAt(rnum_); }
+void Player::setRoom(Room* room) { rnum_ = room->rnum(); }
 
 string Player::Serialize()
 {

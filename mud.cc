@@ -81,6 +81,7 @@ string processConnection(string sockuid, int state, string msg)
 		}
 	} else if (state == PASSWORD_CONFIRMED){
 		// char creation?
+		res = "Hello my name is Zsdghu. I am a demon and I have infected your brain.\n";
 		state = INGAME;
 	}
 	res.insert(0, 1, (char)state);

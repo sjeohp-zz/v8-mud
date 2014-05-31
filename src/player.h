@@ -8,7 +8,6 @@ using namespace std;
 using namespace v8;
 
 class Room;
-Room* roomAt(long rnum);
 
 enum PLAYER_STATE
 {
@@ -35,15 +34,19 @@ private:
 public:
 	Player();
 	Player(string name, string hash);
+
 	string Serialize();
+	
 	string name() const { return name_; }
 	void setName(string name) { name_ = name; }
 	string passwordHash() const { return password_hash_; }
 	void setPasswordHash(string password_hash) { password_hash_ = password_hash; }
 	string socketUID() const { return sockuid_; }
 	void setSocketUID(string sockuid) { sockuid_ = sockuid; }
-	Room* room() const { return roomAt(rnum_); }
+
+	Room* room() const;
 	void setRoom(Room* room);
+
 	Player* roomPlayersNext() const { return room_players_next_; }
 	void setRoomPlayersNext(Player* ptr) { room_players_next_ = ptr; }
 	Player* roomPlayersPrev() const { return room_players_prev_; }
