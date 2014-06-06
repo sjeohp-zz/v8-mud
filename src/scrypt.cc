@@ -44,6 +44,7 @@ string HashPassword(string key)
 	Handle<Value> hash = hasher->CallAsFunction(global, 2, hashArgv);
 	string result = string(*String::Utf8Value(hash->ToString()));
 	
+	cout << result << endl;
 	return result;;
 }
 

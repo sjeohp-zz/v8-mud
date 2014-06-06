@@ -2,6 +2,8 @@
 #define Mud_Player_h
 
 #include <string>
+#include <iostream>
+
 #include <v8.h>
 
 using namespace std;
@@ -61,7 +63,7 @@ void connectSocketToNewPlayer(string sockuid, Player player);
 void disconnectPlayerOnSocket(string sockuid);
 Handle<Value> SetDisconnect(const Arguments& args);
 Handle<Value> RemovePlayerOnSocket(const Arguments& args);
-Handle<Value> SavePlayers(const Arguments& args);
+void savePlayers();
 void loadPlayers();
 
 #endif

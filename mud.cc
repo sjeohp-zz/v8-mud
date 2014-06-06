@@ -117,6 +117,14 @@ Handle<Value> ProcessInput(const Arguments& args)
     return scope.Close(String::New(res.c_str()));
 }
 
+Handle<Value> Save(const Arguments& args)
+{
+	savePlayers();
+	saveRooms();
+
+	return Null();
+}
+
 Handle<Value> RunBenchmarks(const Arguments& args)
 {
 	return Null();
@@ -128,7 +136,7 @@ void Init(Handle<Object> exports, Handle<Object> module)
 	exports->Set(String::NewSymbol("setScrypt"), FunctionTemplate::New(SetScrypt)->GetFunction());
 	exports->Set(String::NewSymbol("setBroadcast"), FunctionTemplate::New(SetBroadcast)->GetFunction());
 	exports->Set(String::NewSymbol("setWrite"), FunctionTemplate::New(SetWrite)->GetFunction());
-	exports->Set(String::NewSymbol("savePlayers"), FunctionTemplate::New(SavePlayers)->GetFunction());
+	exports->Set(String::NewSymbol("save"), FunctionTemplate::New(Save)->GetFunction());
 	exports->Set(String::NewSymbol("setDisconnect"), FunctionTemplate::New(SetDisconnect)->GetFunction());
 	exports->Set(String::NewSymbol("removePlayerOnSocket"), FunctionTemplate::New(RemovePlayerOnSocket)->GetFunction());
 	exports->Set(String::NewSymbol("runBenchmarks"), FunctionTemplate::New(RunBenchmarks)->GetFunction());

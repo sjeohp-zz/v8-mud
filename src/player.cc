@@ -118,7 +118,7 @@ Handle<Value> RemovePlayerOnSocket(const Arguments& args)
 	return Null();
 }
 
-Handle<Value> SavePlayers(const Arguments& args)
+void savePlayers()
 {
 	for (auto it = PlayersInGame.begin(); it != PlayersInGame.end(); ++it){
 		savePlayer(it->second);
@@ -131,7 +131,7 @@ Handle<Value> SavePlayers(const Arguments& args)
 	timeinfo = localtime(&rawtime);
 	string timeStr = string(asctime(timeinfo));
 
-	ofstream tf("./savefiles/LastSaveTime.txt", ios::out | ios::trunc);
+	ofstream tf("./savefiles/PlayersSaveTime.txt", ios::out | ios::trunc);
 	if (tf.is_open()){
 		tf << timeStr;
 	}
@@ -143,14 +143,12 @@ Handle<Value> SavePlayers(const Arguments& args)
 		}
 		file.close();
     }
-
-    return Null();
 }
 
 void loadPlayers()
 {
 	stringstream tb;
-	ifstream tf("./savefiles/LastSaveTime.txt", ios::in);
+	ifstream tf("./savefiles/PlayersSaveTime.txt", ios::in);
 	if (tf.is_open()){
 		tb << tf.rdbuf();
 	}
@@ -178,7 +176,7 @@ void loadPlayers()
 Player::Player() {};
 
 Player::Player(string name, string hash) 
-: name_(name), password_hash_(hash)
+: name_(name.c_str()), password_hash_(hash)
 {
 	room_players_next_ = this;
 	room_players_prev_ = this;

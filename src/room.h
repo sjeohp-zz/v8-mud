@@ -2,6 +2,7 @@
 #define Mud_Room_h
 
 #include <string>
+#include <iostream>
 #include <vector>
 
 using namespace std;
@@ -19,6 +20,8 @@ private:
 public:
 	Room();
 	Room(long rnum);
+
+	string Serialize();
 
 	long rnum() const { return rnum_; }
 	void setRnum(long rnum) { rnum_ = rnum; }
@@ -48,6 +51,7 @@ public:
 };
 
 Room* roomAt(long rnum);
+void saveRooms();
 void loadRooms();
 
 #endif

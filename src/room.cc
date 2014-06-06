@@ -1,7 +1,9 @@
 #include "room.h"
 #include "player.h"
 
-#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <ctime>
 #include <string>
 #include <vector>
 
@@ -96,27 +98,6 @@ string Room::exitstr() const
 	return str;
 }
 
-Room* roomAt(long rnum)
-{
-	if (rnum >= RoomsAll.size() || rnum < 1){
-		return 0;
-	}
-	Room* rm = &RoomsAll.at(rnum);
-	return rm;
-}
-
-void loadRooms()
-{
-	for (int i = 0; i < 100; ++i){
-		RoomsAll.at(i) = Room(i);
-	}
-
-	Room rm = Room(1);
-	rm.setName("Lobby");
-	rm.setDesc("There is nothing here.");
-	RoomsAll.at(1) = rm;
-}
-
 Room* Room::north() const { return roomAt(exits_[0]); }
 Room* Room::east() const { return roomAt(exits_[1]); }
 Room* Room::south() const { return roomAt(exits_[2]); }
@@ -130,4 +111,135 @@ void Room::setExit(int dir, long rnum)
 		return;
 	}
 	exits_[dir] = rnum;
+}
+
+string Room::Serialize()
+{
+	stringstream strstream;
+	strstream << "{{";
+	strstream << rnum_ << "}";
+	strstream << exits_[0] << "}";
+	strstream << exits_[1] << "}";
+	strstream << exits_[2] << "}";
+	strstream << exits_[3] << "}";
+	strstream << exits_[4] << "}";
+	strstream << exits_[5] << "}";
+	strstream << name_ << "}";
+	strstream << desc_ << "}";
+	strstream << "}}";
+	return strstream.str();
+}
+
+Room* roomAt(long rnum)
+{
+	if (rnum >= RoomsAll.size() || rnum < 1){
+		return 0;
+	}
+	Room* rm = &RoomsAll.at(rnum);
+	return rm;
+}
+
+void loadRooms()
+{
+	stringstream tb;
+	ifstream tf("./savefiles/RoomsSaveTime.txt", ios::in);
+	if (tf.is_open()){
+		tb << tf.rdbuf();
+	}
+
+	int roomCount = 0;
+	ifstream file("./savefiles/Rooms " + tb.str() + ".txt", ios::in);
+	if (file.is_open()){
+
+		long rnum;
+		long north;
+		long east;
+		long south;
+		long west;
+		long up;
+		long down;
+		string name;
+		string desc;
+
+		stringstream buffer;
+		buffer << file.rdbuf();
+		string str = buffer.str();
+		unsigned long temp;
+		int c = 1;
+		int n = 0;
+		
+		while ((temp = str.find('{', c)) != string::npos){
+			c = temp + 1;
+			n = str.find('}', c);
+			long rnum = (long)str.substr(c, n-c).c_str();
+			c = n + 1;
+			n = str.find('}', c);
+			long north = (long)str.substr(c, n-c).c_str();
+			c = n + 1;
+			n = str.find('}', c);
+			long east = (long)str.substr(c, n-c).c_str();
+			c = n + 1;
+			n = str.find('}', c);
+			long south = (long)str.substr(c, n-c).c_str();
+			c = n + 1;
+			n = str.find('}', c);
+			long west = (long)str.substr(c, n-c).c_str();
+			c = n + 1;
+			n = str.find('}', c);
+			long up = (long)str.substr(c, n-c).c_str();
+			c = n + 1;
+			n = str.find('}', c);
+			long down = (long)str.substr(c, n-c).c_str();
+			c = n + 1;
+			n = str.find('}', c);
+			string name = str.substr(c, n-c);
+			c = n + 1;
+			n = str.find('}', c);
+			string desc = str.substr(c, n-c);
+			Room rm = Room(rnum);
+			rm.setExit(0, north);
+			rm.setExit(1, east);
+			rm.setExit(2, south);
+			rm.setExit(3, west);
+			rm.setExit(4, up);
+			rm.setExit(5, down);
+			rm.setName(name);
+			rm.setDesc(desc);
+			RoomsAll.push_back(rm);
+			++roomCount;
+		}
+	}
+
+	if (roomCount < 2){
+		for (int i = 0; i < RoomsAll.size(); ++i){
+			RoomsAll.at(i) = Room(i);
+		}
+		Room rm = Room(1);
+		rm.setName("Lobby");
+		rm.setDesc("There is nothing here.");
+		RoomsAll.at(1) = rm;
+	}
+}
+
+void saveRooms()
+{
+	time_t rawtime;
+	struct tm * timeinfo;
+
+	time (&rawtime);
+	timeinfo = localtime(&rawtime);
+	string timeStr = string(asctime(timeinfo));
+
+	ofstream tf("./savefiles/RoomsSaveTime.txt", ios::out | ios::trunc);
+	if (tf.is_open()){
+		tf << timeStr;
+	}
+
+	ofstream file("./savefiles/Rooms " + timeStr + ".txt", ios::out | ios::app);
+	if (file.is_open()){
+		for (auto it = RoomsAll.begin(); it != RoomsAll.end(); ++it){
+			file << it->Serialize() << ",";
+		}
+		file.close();
+    }
 }

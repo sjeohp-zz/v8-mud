@@ -36,7 +36,7 @@ function disconnect(sockuid){
 }
 
 setInterval(function(){
-	mud.savePlayers();
+	mud.save();
 }, 60*2*1000);
 
 var server = net.createServer(function(socket) {
