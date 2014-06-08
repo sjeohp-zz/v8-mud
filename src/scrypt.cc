@@ -43,8 +43,7 @@ string HashPassword(string key)
 	Handle<Value> hashArgv[] = { String::New(key.c_str()), scryptParams };
 	Handle<Value> hash = hasher->CallAsFunction(global, 2, hashArgv);
 	string result = string(*String::Utf8Value(hash->ToString()));
-	
-	cout << result << endl;
+
 	return result;;
 }
 

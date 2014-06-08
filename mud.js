@@ -37,7 +37,7 @@ function disconnect(sockuid){
 
 setInterval(function(){
 	mud.save();
-}, 60*2*1000);
+}, 60*.5*1000);
 
 var server = net.createServer(function(socket) {
 	socket.setKeepAlive(true, 10000);

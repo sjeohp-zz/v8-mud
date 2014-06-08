@@ -1,0 +1,1 @@
+{{0}{0}{0}{0}{0}{0}{0}{The Void}{There is nothing here.}},{{1}{1}{0}{1}{0}{2}{0}{Lobby}{There is nothing here.}},{{2}{0}{0}{0}{0}{0}{1}{The Void}{There is nothing here.}},{{3}{0}{0}{0}{0}{0}{0}{The Void}{There is nothing here.}},{{4}{0}{0}{0}{0}{0}{0}{The Void}{There is nothing here.}},

@@ -9,7 +9,7 @@
 
 using namespace std;
 
-static vector<Room> RoomsAll(100);
+static vector<Room> RoomsAll(5);
 
 Room::Room()
 {
@@ -116,17 +116,17 @@ void Room::setExit(int dir, long rnum)
 string Room::Serialize()
 {
 	stringstream strstream;
-	strstream << "{{";
-	strstream << rnum_ << "}";
-	strstream << exits_[0] << "}";
-	strstream << exits_[1] << "}";
-	strstream << exits_[2] << "}";
-	strstream << exits_[3] << "}";
-	strstream << exits_[4] << "}";
-	strstream << exits_[5] << "}";
-	strstream << name_ << "}";
-	strstream << desc_ << "}";
-	strstream << "}}";
+	strstream << "{";
+	strstream << "{" << rnum_ << "}";
+	strstream << "{" << exits_[0] << "}";
+	strstream << "{" << exits_[1] << "}";
+	strstream << "{" << exits_[2] << "}";
+	strstream << "{" << exits_[3] << "}";
+	strstream << "{" << exits_[4] << "}";
+	strstream << "{" << exits_[5] << "}";
+	strstream << "{" << name_ << "}";
+	strstream << "{" << desc_ << "}";
+	strstream << "}";
 	return strstream.str();
 }
 
@@ -151,16 +151,6 @@ void loadRooms()
 	ifstream file("./savefiles/Rooms " + tb.str() + ".txt", ios::in);
 	if (file.is_open()){
 
-		long rnum;
-		long north;
-		long east;
-		long south;
-		long west;
-		long up;
-		long down;
-		string name;
-		string desc;
-
 		stringstream buffer;
 		buffer << file.rdbuf();
 		string str = buffer.str();
@@ -169,31 +159,31 @@ void loadRooms()
 		int n = 0;
 		
 		while ((temp = str.find('{', c)) != string::npos){
-			c = temp + 1;
+			c = temp + 2;
 			n = str.find('}', c);
-			long rnum = (long)str.substr(c, n-c).c_str();
-			c = n + 1;
+			long rnum = atol(str.substr(c, n-c).c_str());
+			c = n + 2;
 			n = str.find('}', c);
-			long north = (long)str.substr(c, n-c).c_str();
-			c = n + 1;
+			long north = atol(str.substr(c, n-c).c_str());
+			c = n + 2;
 			n = str.find('}', c);
-			long east = (long)str.substr(c, n-c).c_str();
-			c = n + 1;
+			long east = atol(str.substr(c, n-c).c_str());
+			c = n + 2;
 			n = str.find('}', c);
-			long south = (long)str.substr(c, n-c).c_str();
-			c = n + 1;
+			long south = atol(str.substr(c, n-c).c_str());
+			c = n + 2;
 			n = str.find('}', c);
-			long west = (long)str.substr(c, n-c).c_str();
-			c = n + 1;
+			long west = atol(str.substr(c, n-c).c_str());
+			c = n + 2;
 			n = str.find('}', c);
-			long up = (long)str.substr(c, n-c).c_str();
-			c = n + 1;
+			long up = atol(str.substr(c, n-c).c_str());
+			c = n + 2;
 			n = str.find('}', c);
-			long down = (long)str.substr(c, n-c).c_str();
-			c = n + 1;
+			long down = atol(str.substr(c, n-c).c_str());
+			c = n + 2;
 			n = str.find('}', c);
 			string name = str.substr(c, n-c);
-			c = n + 1;
+			c = n + 2;
 			n = str.find('}', c);
 			string desc = str.substr(c, n-c);
 			Room rm = Room(rnum);
@@ -205,7 +195,7 @@ void loadRooms()
 			rm.setExit(5, down);
 			rm.setName(name);
 			rm.setDesc(desc);
-			RoomsAll.push_back(rm);
+			RoomsAll.at(rnum) = rm;
 			++roomCount;
 		}
 	}
