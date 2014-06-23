@@ -140,7 +140,7 @@ void Init(Handle<Object> exports, Handle<Object> module)
 	exports->Set(String::NewSymbol("removePlayerOnSocket"), FunctionTemplate::New(RemovePlayerOnSocket)->GetFunction());
 	exports->Set(String::NewSymbol("runBenchmarks"), FunctionTemplate::New(RunBenchmarks)->GetFunction());
 
-	loadRooms(); // should come before players
+	loadRooms(); // must come before players
 	loadPlayers();
 }
 
