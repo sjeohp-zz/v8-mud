@@ -65,6 +65,8 @@ void savePlayer(Player player)
 
 void removePlayerFromGame(Player player)
 {
+	player.room()->removePlayerWithName(player.name());
+
 	cout << player.name() << " left." << endl;
 
 	savePlayer(player);

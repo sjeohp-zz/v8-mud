@@ -26,8 +26,8 @@ string cmdSouth(string sockuid, string args);
 string cmdWest(string sockuid, string args);
 string cmdUp(string sockuid, string args);
 string cmdDown(string sockuid, string args);
-string cmdBuild(string sockuid, string args);
-string cmdBuildTilde(string sockuid, string args);
+string cmdTunnelOneWay(string sockuid, string args);
+string cmdTunnelBothWays(string sockuid, string args);
 string cmdGet(string sockuid, string args);
 string cmdGossip(string sockuid, string args);
 string cmdLook(string sockuid, string args);
@@ -97,7 +97,7 @@ string cmdTunnelOneWay(string sockuid, string args)
 
 	string res = string(1, (char)INGAME);
 	if (dirend < 0){
-		res += "Invalid arguments. (build <direction> <destination rnum>)\n";
+		res += "Invalid arguments. (tunnel <direction> <destination rnum>)\n";
 		return res;
 	}
 
@@ -105,14 +105,14 @@ string cmdTunnelOneWay(string sockuid, string args)
 	int dir;
 
 	if (!valueForKey(Commands(), (unsigned char*)dirkey.c_str())){
-		res += "That's not a valid direction. (build <direction> <destination rnum>)\n";
+		res += "That's not a valid direction. (tunnel <direction> <destination rnum>)\n";
 		return res;
 	} else {
 		dir = DirectionMap[dirkey[0]];
 	}
 
 	if (dirend + 1 >= args.size()){
-		res += "That's not a valid destination. (build <direction> <destination rnum>)\n";
+		res += "That's not a valid destination. (tunnel <direction> <destination rnum>)\n";
 		return res;
 	}
 
@@ -133,7 +133,7 @@ string cmdTunnelBothWays(string sockuid, string args)
 
 	string res = string(1, (char)INGAME);
 	if (dirend < 0){
-		res += "Invalid arguments. (build <direction> <destination rnum>)\n";
+		res += "Invalid arguments. (tunnel <direction> <destination rnum>)\n";
 		return res;
 	}
 
@@ -141,14 +141,14 @@ string cmdTunnelBothWays(string sockuid, string args)
 	int dir;
 
 	if (!valueForKey(Commands(), (unsigned char*)dirkey.c_str())){
-		res += "That's not a valid direction. (build <direction> <destination rnum>)\n";
+		res += "That's not a valid direction. (tunnel <direction> <destination rnum>)\n";
 		return res;
 	} else {
 		dir = DirectionMap[dirkey[0]];
 	}
 
 	if (dirend + 1 >= args.size()){
-		res += "That's not a valid destination. (build <direction> <destination rnum>)\n";
+		res += "That's not a valid destination. (tunnel <direction> <destination rnum>)\n";
 		return res;
 	}
 
