@@ -1,7 +1,7 @@
 V8Mud
 =====
 
-C++ MUD with NodeJS handling connections and V8 to glue it all together
+C++ MUD with NodeJS handling connections and V8 gluing it all together
 
 Works on OSX and Linux
 
