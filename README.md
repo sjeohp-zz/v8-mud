@@ -1,14 +1,14 @@
 V8Mud
 =====
 
-MUD game with a C++ core and NodeJS handling connections
+C++ MUD with NodeJS handling connections and V8 to glue it all together
 
-Should work on OSX and Linux
+Works on OSX and Linux
 
 To run:
 
-    git clone https://github.com/sjeohp/V8Mud.git
-    cd V8Mud
+    git clone https://github.com/sjeohp/v8-mud.git
+    cd v8-mud
     npm install
     node-gyp configure
     node-gyp build
