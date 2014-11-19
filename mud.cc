@@ -11,6 +11,8 @@
 #include "src/trie.h"
 #include "src/scrypt.h"
 
+#include "src/chess.h"
+
 using namespace std;
 using namespace v8;
 
@@ -34,6 +36,9 @@ string processCommand(string sockuid, string str)
 string processConnection(string sockuid, int state, string msg)
 {
 	string res;
+	// ActiveNames[sockuid] = msg;
+	// state = INGAME;
+
 	if (state == UNNAMED){
 		msg[0] = toupper(msg[0]);
 		ActiveNames[sockuid] = msg;
@@ -83,13 +88,13 @@ string processConnection(string sockuid, int state, string msg)
 		// char creation?
 		state = INGAME;
 	}
+	
 	res.insert(0, 1, (char)state);
 	return res;
 }
 
 Handle<Value> ProcessInput(const Arguments& args)
 {
-	
     HandleScope scope;
 
     if (args.Length() < 1) {
@@ -145,3 +150,6 @@ void Init(Handle<Object> exports, Handle<Object> module)
 }
 
 NODE_MODULE(mud, Init)
+
+
+

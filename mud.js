@@ -35,9 +35,9 @@ function disconnect(sockuid){
 	}
 }
 
-setInterval(function(){
-	mud.save();
-}, 60*.5*1000);
+// setInterval(function(){
+// 	mud.save();
+// }, 60*.5*1000);
 
 var server = net.createServer(function(socket) {
 	socket.setKeepAlive(true, 10000);
@@ -81,5 +81,4 @@ var server = net.createServer(function(socket) {
 	mud.setBroadcast(broadcast);
 	mud.setWrite(write);
 	mud.setDisconnect(disconnect);
-	// mud.runBenchmarks();
 });

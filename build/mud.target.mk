@@ -14,7 +14,7 @@ DEFS_Debug := \
 CFLAGS_Debug := \
 	-O0 \
 	-gdwarf-2 \
-	-mmacosx-version-min=10.9 \
+	-mmacosx-version-min=10.10 \
 	-arch x86_64 \
 	-Wall \
 	-Wendif-labels \
@@ -40,9 +40,9 @@ CFLAGS_OBJC_Debug :=
 CFLAGS_OBJCC_Debug :=
 
 INCS_Debug := \
-	-I/Users/sjeohp/.node-gyp/0.10.22/src \
-	-I/Users/sjeohp/.node-gyp/0.10.22/deps/uv/include \
-	-I/Users/sjeohp/.node-gyp/0.10.22/deps/v8/include \
+	-I/Users/joseph/.node-gyp/0.10.33/src \
+	-I/Users/joseph/.node-gyp/0.10.33/deps/uv/include \
+	-I/Users/joseph/.node-gyp/0.10.33/deps/v8/include \
 	-I$(srcdir)/frameworks
 
 DEFS_Release := \
@@ -55,7 +55,7 @@ DEFS_Release := \
 CFLAGS_Release := \
 	-Os \
 	-gdwarf-2 \
-	-mmacosx-version-min=10.9 \
+	-mmacosx-version-min=10.10 \
 	-arch x86_64 \
 	-Wall \
 	-Wendif-labels \
@@ -81,13 +81,14 @@ CFLAGS_OBJC_Release :=
 CFLAGS_OBJCC_Release :=
 
 INCS_Release := \
-	-I/Users/sjeohp/.node-gyp/0.10.22/src \
-	-I/Users/sjeohp/.node-gyp/0.10.22/deps/uv/include \
-	-I/Users/sjeohp/.node-gyp/0.10.22/deps/v8/include \
+	-I/Users/joseph/.node-gyp/0.10.33/src \
+	-I/Users/joseph/.node-gyp/0.10.33/deps/uv/include \
+	-I/Users/joseph/.node-gyp/0.10.33/deps/v8/include \
 	-I$(srcdir)/frameworks
 
 OBJS := \
 	$(obj).target/$(TARGET)/mud.o \
+	$(obj).target/$(TARGET)/src/chess.o \
 	$(obj).target/$(TARGET)/src/commands.o \
 	$(obj).target/$(TARGET)/src/player.o \
 	$(obj).target/$(TARGET)/src/sockets.o \
@@ -124,7 +125,7 @@ $(obj).$(TOOLSET)/$(TARGET)/%.o: $(obj)/%.cc FORCE_DO_CMD
 LDFLAGS_Debug := \
 	-stdlib=libc++ \
 	-Wl,-search_paths_first \
-	-mmacosx-version-min=10.9 \
+	-mmacosx-version-min=10.10 \
 	-arch x86_64 \
 	-L$(builddir)
 
@@ -135,7 +136,7 @@ LIBTOOLFLAGS_Debug := \
 LDFLAGS_Release := \
 	-stdlib=libc++ \
 	-Wl,-search_paths_first \
-	-mmacosx-version-min=10.9 \
+	-mmacosx-version-min=10.10 \
 	-arch x86_64 \
 	-L$(builddir)
 

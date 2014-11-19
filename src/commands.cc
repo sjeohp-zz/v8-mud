@@ -7,6 +7,8 @@
 
 #include <map>
 
+#include "chess.h"
+
 using namespace std;
 using namespace v8;
 
@@ -30,6 +32,7 @@ string cmdTunnelOneWay(string sockuid, string args);
 string cmdTunnelBothWays(string sockuid, string args);
 string cmdGet(string sockuid, string args);
 string cmdGossip(string sockuid, string args);
+string cmdResetBoard(string sockuid, string args);
 string cmdLook(string sockuid, string args);
 string cmdSay(string sockuid, string args);
 string cmdQuit(string sockuid, string args);
@@ -193,8 +196,36 @@ string cmdGossip(string sockuid, string args)
 	return msg;
 }
 
+string cmdResetBoard(string sockuid, string args)
+{
+	resetBoard(WHITE);
+	return string(1, (char)INGAME) + "Board reset.\n";
+}
+
 string cmdLook(string sockuid, string args)
 {
+	if (args == "board") {
+		Board* board = GetSharedBoard();
+		string boardStr = string(1, (char)INGAME) + "\n  a b c d e f g h \n";
+		// printf("\n");
+		for (int row = 0; row < GetBoardDimen(); ++row) {
+			boardStr += to_string(GetBoardDimen()-row);
+			boardStr += " ";
+			for (int col = 0; col < GetBoardDimen(); ++col) {
+				Square* square = board[row][col];
+				boardStr += strForSquare(square);
+				boardStr += " ";
+			}
+			boardStr += " ";
+			boardStr += to_string(GetBoardDimen()-row);
+			boardStr += "\n";
+			// printf("\n");
+		}
+
+		boardStr += "  a b c d e f g h \n\n";
+		return boardStr;
+	}
+
 	Player* player = playerForSocket(sockuid);
 	string rmname = "\033[96m" + player->room()->name() + "\033[39m\n";
 	string rmexits = "\033[92m" + player->room()->exitstr() + "\033[39m\n";
@@ -229,7 +260,7 @@ string cmdQuit(string sockuid, string args)
 	return string(1, (char)QUITTING);
 }
 
-static const size_t ncmd = 13; // remember to increment this when adding commands
+static const size_t ncmd = 14; // remember to increment this when adding commands
 static CommandPair commandPairs[ncmd] = // precedence is top down
 {
 	{ (const unsigned char*)"north\0", (void*)&cmdNorth, 1 },
@@ -242,6 +273,7 @@ static CommandPair commandPairs[ncmd] = // precedence is top down
 	{ (const unsigned char*)"get\0", (void*)&cmdGet, 1 },
 	{ (const unsigned char*)"gossip\0", (void*)&cmdGossip, 1 },
 
+	{ (const unsigned char*)"reset\0", (void*)&cmdResetBoard, 0 },
 	{ (const unsigned char*)"look\0", (void*)&cmdLook, 1 },
 
 	{ (const unsigned char*)"say\0", (void*)&cmdSay, 1 },
