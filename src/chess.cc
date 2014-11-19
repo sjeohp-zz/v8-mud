@@ -230,18 +230,22 @@ std::string strForSquare(Square* square) {
 // 	printf("  a b c d e f g h \n\n");
 // }
 
-void updateBoard(Board* board) {
+int updateBoardWithMove(string mv) {
 
-	char str[6];
-	printf("Enter your move (e.g. 'b1 c3'):\n");
-	fgets(str, 6, stdin);
+	if (mv.length() > 8) {
+		return 1;
+	}
+	Board* board = GetSharedBoard();
+	string str = mv;
+	// printf("Enter your move (e.g. 'b1 c3'):\n");
+	// fgets(str, 6, stdin);
 	if (str[0]-'a' < 0 || str[0]-'a' > 7 ||
 		str[1]-'1' < 0 || str[1]-'1' > 7 ||
 		str[3]-'a' < 0 || str[3]-'a' > 7 ||
 		str[4]-'1' < 0 || str[4]-'1' > 7
 		) {
-		printf("Invalid move (out of bounds / ill formed): %s\n", str);
-		return;
+		// printf("Invalid move (out of bounds / ill formed): %s\n", str);
+		return 1;
 	}
 	int frow = 7-(str[1]-'1');
 	int fcol = str[0]-'a';
@@ -250,13 +254,15 @@ void updateBoard(Board* board) {
 	Square* from = board[frow][fcol];
 	Square* to = board[trow][tcol];
 	if (from == NULL) {
-		printf("Invalid move (no piece): %s", str);
-		return;
+		// printf("Invalid move (no piece): %s", str);
+		return 1;
 	}
 	to->empty = 0;
 	to->pieceColor = from->pieceColor;
 	to->pieceType = from->pieceType;
 	from->empty = 1;
+
+	return 0;
 }
 
 int checkGameOver() {

@@ -37,5 +37,6 @@ Board* GetSharedBoard();
 Board* createBoard(int dimen);
 void resetBoard(PieceColor playingAsColor);
 std::string strForSquare(Square* square);
+int updateBoardWithMove(string mv);
 
 #endif
