@@ -3,16 +3,16 @@
 TOOLSET := target
 TARGET := mud
 DEFS_Debug := \
-	'-D_DARWIN_USE_64_BIT_INODE=1' \
 	'-D_LARGEFILE_SOURCE' \
 	'-D_FILE_OFFSET_BITS=64' \
+	'-D_DARWIN_USE_64_BIT_INODE=1' \
 	'-DBUILDING_NODE_EXTENSION' \
 	'-DDEBUG' \
 	'-D_DEBUG'
 
 # Flags passed to all source files.
 CFLAGS_Debug := \
-	-O0 \
+	-Os \
 	-gdwarf-2 \
 	-mmacosx-version-min=10.9 \
 	-arch x86_64 \
@@ -40,15 +40,15 @@ CFLAGS_OBJC_Debug :=
 CFLAGS_OBJCC_Debug :=
 
 INCS_Debug := \
-	-I/Users/sjeohp/.node-gyp/0.10.22/src \
-	-I/Users/sjeohp/.node-gyp/0.10.22/deps/uv/include \
-	-I/Users/sjeohp/.node-gyp/0.10.22/deps/v8/include \
+	-I/Users/joseph/.node-gyp/0.8.18/src \
+	-I/Users/joseph/.node-gyp/0.8.18/deps/uv/include \
+	-I/Users/joseph/.node-gyp/0.8.18/deps/v8/include \
 	-I$(srcdir)/frameworks
 
 DEFS_Release := \
-	'-D_DARWIN_USE_64_BIT_INODE=1' \
 	'-D_LARGEFILE_SOURCE' \
 	'-D_FILE_OFFSET_BITS=64' \
+	'-D_DARWIN_USE_64_BIT_INODE=1' \
 	'-DBUILDING_NODE_EXTENSION'
 
 # Flags passed to all source files.
@@ -81,9 +81,9 @@ CFLAGS_OBJC_Release :=
 CFLAGS_OBJCC_Release :=
 
 INCS_Release := \
-	-I/Users/sjeohp/.node-gyp/0.10.22/src \
-	-I/Users/sjeohp/.node-gyp/0.10.22/deps/uv/include \
-	-I/Users/sjeohp/.node-gyp/0.10.22/deps/v8/include \
+	-I/Users/joseph/.node-gyp/0.8.18/src \
+	-I/Users/joseph/.node-gyp/0.8.18/deps/uv/include \
+	-I/Users/joseph/.node-gyp/0.8.18/deps/v8/include \
 	-I$(srcdir)/frameworks
 
 OBJS := \
@@ -126,7 +126,8 @@ LDFLAGS_Debug := \
 	-Wl,-search_paths_first \
 	-mmacosx-version-min=10.9 \
 	-arch x86_64 \
-	-L$(builddir)
+	-L$(builddir) \
+	-install_name @rpath/mud.node
 
 LIBTOOLFLAGS_Debug := \
 	-stdlib=libc++ \
@@ -137,7 +138,8 @@ LDFLAGS_Release := \
 	-Wl,-search_paths_first \
 	-mmacosx-version-min=10.9 \
 	-arch x86_64 \
-	-L$(builddir)
+	-L$(builddir) \
+	-install_name @rpath/mud.node
 
 LIBTOOLFLAGS_Release := \
 	-stdlib=libc++ \

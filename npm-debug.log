@@ -1,0 +1,55 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/Cellar/node/0.8.18/bin/node',
+1 verbose cli   '/usr/local/bin/npm',
+1 verbose cli   'install' ]
+2 info using npm@1.2.2
+3 info using node@v0.8.18
+4 verbose read json /Users/joseph/Documents/Personal/V8Mud/package.json
+5 verbose readDependencies using package.json deps
+6 verbose install where, deps [ '/Users/joseph/Documents/Personal/V8Mud',
+6 verbose install   [ 'node-gyp', 'cuid', 'scrypt' ] ]
+7 verbose from cache /Users/joseph/Documents/Personal/V8Mud/package.json
+8 info preinstall v8mud@0.0.1
+9 verbose read json /Users/joseph/Documents/Personal/V8Mud/node_modules/cuid/package.json
+10 verbose read json /Users/joseph/Documents/Personal/V8Mud/node_modules/node-gyp/package.json
+11 verbose read json /Users/joseph/Documents/Personal/V8Mud/node_modules/scrypt/package.json
+12 verbose from cache /Users/joseph/Documents/Personal/V8Mud/package.json
+13 verbose readDependencies using package.json deps
+14 verbose read json /Users/joseph/Documents/Personal/V8Mud/node_modules/.bin/package.json
+15 verbose from cache /Users/joseph/Documents/Personal/V8Mud/node_modules/cuid/package.json
+16 verbose from cache /Users/joseph/Documents/Personal/V8Mud/node_modules/node-gyp/package.json
+17 verbose from cache /Users/joseph/Documents/Personal/V8Mud/node_modules/scrypt/package.json
+18 verbose already installed skipping scrypt@>= 3.0.1 /Users/joseph/Documents/Personal/V8Mud
+19 verbose already installed skipping node-gyp@>= 0.13.0 /Users/joseph/Documents/Personal/V8Mud
+20 verbose already installed skipping cuid@>= 1.2.4 /Users/joseph/Documents/Personal/V8Mud
+21 silly resolved []
+22 info build /Users/joseph/Documents/Personal/V8Mud
+23 verbose from cache /Users/joseph/Documents/Personal/V8Mud/package.json
+24 verbose linkStuff [ false, false, false, '/Users/joseph/Documents/Personal' ]
+25 info linkStuff v8mud@0.0.1
+26 verbose linkBins v8mud@0.0.1
+27 verbose linkMans v8mud@0.0.1
+28 verbose rebuildBundles v8mud@0.0.1
+29 verbose rebuildBundles [ '.bin', 'cuid', 'node-gyp', 'scrypt' ]
+30 info install v8mud@0.0.1
+31 verbose unsafe-perm in lifecycle true
+32 silly exec sh "-c" "node-gyp configure; node-gyp build"
+33 silly sh,-c,node-gyp configure; node-gyp build,/Users/joseph/Documents/Personal/V8Mud spawning
+34 info v8mud@0.0.1 Failed to exec install script
+35 error v8mud@0.0.1 install: `node-gyp configure; node-gyp build`
+35 error `sh "-c" "node-gyp configure; node-gyp build"` failed with 1
+36 error Failed at the v8mud@0.0.1 install script.
+36 error This is most likely a problem with the v8mud package,
+36 error not with npm itself.
+36 error Tell the author that this fails on your system:
+36 error     node-gyp configure; node-gyp build
+36 error You can get their info via:
+36 error     npm owner ls v8mud
+36 error There is likely additional logging output above.
+37 error System Darwin 13.4.0
+38 error command "/usr/local/Cellar/node/0.8.18/bin/node" "/usr/local/bin/npm" "install"
+39 error cwd /Users/joseph/Documents/Personal/V8Mud
+40 error node -v v0.8.18
+41 error npm -v 1.2.2
+42 error code ELIFECYCLE
+43 verbose exit [ 1, true ]
